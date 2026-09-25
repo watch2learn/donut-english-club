@@ -459,7 +459,41 @@ var SAVE = {};
 try{ SAVE = JSON.parse(localStorage.getItem('donutClubV1')||'{}') }catch(e){ SAVE = {} }
 SAVE.watched = SAVE.watched||{}; SAVE.scores = SAVE.scores||{}; SAVE.badges = SAVE.badges||{};
 SAVE.pred = SAVE.pred||{}; SAVE.muted = !!SAVE.muted;
-function save(){ try{ localStorage.setItem('donutClubV1', JSON.stringify(SAVE)) }catch(e){} }
+function save(){
+  SAVE.u = Date.now();
+  try{ localStorage.setItem('donutClubV1', JSON.stringify(SAVE)) }catch(e){}
+  clearTimeout(window.__sbTimer);
+  window.__sbTimer = setTimeout(cloudPush, 600);
+}
+
+/* ---------- cloud sync (Supabase) ---------- */
+var SB_URL='https://camsagasrpijnpcjaqwa.supabase.co';
+var SB_KEY='sb_publishable_M8jFhtjYxEKTzpEbUVUWsA_TVw99sEb';
+var SB_ON=true;
+function sbFetch(path, opts){
+  opts=opts||{};
+  opts.headers=Object.assign({'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}, opts.headers||{});
+  return fetch(SB_URL+'/rest/v1/'+path, opts).then(function(r){
+    if(!r.ok) return r.text().then(function(t){ throw new Error('Supabase '+r.status+': '+t.slice(0,120)) });
+    return r.json();
+  });
+}
+function cloudPush(){
+  if(!SB_ON || !SAVE.name) return;
+  try{
+    sbFetch('students', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body: JSON.stringify([{name:SAVE.name, data:SAVE}])})
+      .catch(function(e){ console.warn('cloud push failed', e); });
+  }catch(e){ console.warn('cloud push failed', e); }
+}
+function cloudPull(name){
+  if(!SB_ON) return Promise.resolve();
+  return sbFetch('students?name=eq.'+encodeURIComponent(name)+'&select=data').then(function(rows){
+    if(rows && rows.length && rows[0].data){
+      var cloud=rows[0].data;
+      if(cloud.u && cloud.u > (SAVE.u||0)){ SAVE = cloud; SAVE.name = name; }
+    }
+  });
+}
 
 /* ---------- audio ---------- */
 var AC = null;
@@ -701,12 +735,19 @@ renderTrophies();
 /* ---------- login ---------- */
 var loginEl=document.getElementById('login');
 function enterClub(name){
-  SAVE.name=name; SAVE.badges.welcome=true; save();
+  SAVE.name=name; SAVE.badges.welcome=true;
   loginEl.style.display='none';
   document.getElementById('mainNav').classList.remove('hide');
   document.getElementById('studentName').textContent=name;
-  renderTrophies();
-  sfx.fanfare();
+  var done=function(){
+    save(); renderTrophies(); sfx.fanfare();
+    var p1=(SAVE.pred&&SAVE.pred.ep1)||''; document.getElementById('predTa').value=p1;
+    if(p1) document.getElementById('predState').textContent='Saved! · Сохранено!';
+    var p2=(SAVE.pred&&SAVE.pred.ep2)||''; document.getElementById('predTa2').value=p2;
+    if(p2) document.getElementById('predState2').textContent='Saved! · Сохранено!';
+    refreshLock(); refreshLock2();
+  };
+  cloudPull(name).then(done, done);
 }
 document.getElementById('startBtn').onclick=function(){
   var n=document.getElementById('nameInput').value.trim();
@@ -838,6 +879,63 @@ document.getElementById('savePred2').onclick=function(){
 };
 refreshLock2();
 
-</script>
-</body>
+
+/* ---------- teacher admin panel (?admin=watch2learn) ---------- */
+(function(){
+  if(!/[?&]admin=watch2learn/.test(location.search)) return;
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}) }
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;z-index:200;background:#fffdf5;overflow:auto;padding:20px;display:none;font-family:inherit';
+  panel.innerHTML='<div style="max-width:900px;margin:0 auto">'
+   +'<button class="btn" id="admClose" style="float:right">Close · Закрыть</button>'
+   +'<h2 style="font-weight:800;margin-top:4px">Teacher panel · Панель учителя</h2>'
+   +'<div class="small" style="margin-bottom:14px">Donut English Club — ученики и их прогресс из облака</div>'
+   +'<div id="admBody" style="display:grid;gap:12px"></div></div>';
+  document.body.appendChild(panel);
+  var body=panel.querySelector('#admBody');
+  function loadAdm(){
+    body.innerHTML='<div class="card">Загрузка… · Loading…</div>';
+    sbFetch('students?select=name,data,created_at&order=created_at.asc').then(function(rows){
+      if(!rows || !rows.length){ body.innerHTML='<div class="card">Пока нет учеников · No students yet</div>'; return; }
+      body.innerHTML='';
+      rows.forEach(function(r){
+        var d=r.data||{};
+        var scores=Object.keys(d.scores||{}).map(function(k){return k+': '+(d.scores[k]||0)+'/10'}).join(', ') || '—';
+        var watched=Object.keys(d.watched||{}).filter(function(k){return d.watched[k]}).join(', ') || '—';
+        var badges=Object.keys(d.badges||{}).filter(function(k){return d.badges[k]}).length;
+        var preds=Object.keys(d.pred||{}).map(function(k){return '<b>'+k+':</b> '+esc(String(d.pred[k]).slice(0,160))}).join('<br>') || '—';
+        var seen=d.u? new Date(d.u).toLocaleString('ru-RU') : '—';
+        var c=document.createElement('div'); c.className='card';
+        c.innerHTML='<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px"><b style="font-size:18px">'+esc(r.name)+'</b><span class="small">last seen · был(а) онлайн: '+seen+'</span></div>'
+         +'<div class="small" style="margin-top:6px;line-height:1.5"><b>Watched · Просмотрено:</b> '+esc(watched)+'<br><b>Scores · Баллы:</b> '+esc(scores)+'<br><b>Badges · Трофеев:</b> '+badges+'</div>'
+         +'<div class="small" style="margin-top:6px;border-top:2px dashed #ddd;padding-top:6px;line-height:1.5"><b>Predictions · Предсказания:</b><br>'+preds+'</div>';
+        body.appendChild(c);
+      });
+    }).catch(function(e){ body.innerHTML='<div class="card">Ошибка загрузки · Load error: '+esc(e.message)+'</div>'; });
+  }
+  var btn=document.createElement('button');
+  btn.className='btn pink'; btn.textContent='👩‍🏫 Teacher · Учителю';
+  btn.style.cssText='position:fixed;bottom:16px;right:16px;z-index:150;color:#fff';
+  btn.onclick=function(){ panel.style.display='block'; loadAdm(); };
+  document.body.appendChild(btn);
+  panel.querySelector('#admClose').onclick=function(){ panel.style.display='none'; };
+})();
+
+
+/* ---------- switch student profile ---------- */
+(function(){
+  var sw=document.createElement('button');
+  sw.className='btn ghost';
+  sw.style.cssText='margin-top:12px;font-size:13px;padding:4px 14px';
+  sw.textContent='Сменить ученика · Switch student';
+  sw.onclick=function(){
+    if(confirm('Выйти из профиля на этом устройстве? · Sign out on this device?')){
+      try{ localStorage.removeItem('donutClubV1'); }catch(e){}
+      location.reload();
+    }
+  };
+  document.querySelector('footer').appendChild(sw);
+})();
+
+</script></body>
 </html>
