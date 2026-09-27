@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Donut English Club</title>
 <meta name="description" content="Learn English with your favorite shows. Watch. Play. Learn!">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/baloo-2@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/baloo-2@5/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/baloo-2@5/800.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap');
 :root{
   --ink:#2b2b2b; --yellow:#ffd90d; --sky:#aee3f5; --pink:#ff8fc7; --orange:#ff8c42;
   --green:#8bd450; --red:#ff6b6b; --blue:#7ec8e3; --paper:#fffdf5; --purple:#b197fc;
@@ -451,14 +453,16 @@ function cloudPush(){
   }catch(e){ SAVE.cloudErr=String(e); cloudStatus('Cloud ERROR: '+SAVE.cloudErr, true); }
 }
 function cloudPull(name){
-  if(!SB_ON) return Promise.resolve();
+  if(!SB_ON) return Promise.resolve(false);
   return sbFetch('students?name=eq.'+encodeURIComponent(name)+'&select=data').then(function(rows){
+    var updated=false;
     if(rows && rows.length && rows[0].data){
       var cloud=rows[0].data;
-      if(cloud.u && cloud.u > (SAVE.u||0)){ SAVE = cloud; SAVE.name = name; }
+      if(cloud.u && cloud.u > (SAVE.u||0)){ SAVE = cloud; SAVE.name = name; updated=true; }
       cloudStatus('Cloud: loaded ✓', false);
     }
-  }).catch(function(e){ cloudStatus('Cloud ERROR: '+(e.message||e), true); });
+    return updated;
+  }).catch(function(e){ cloudStatus('Cloud ERROR: '+(e.message||e), true); return false; });
 }
 
 /* ================= SOUND ================= */
@@ -545,6 +549,7 @@ document.addEventListener('click',function(e){
 
 /* ================= ROUTER ================= */
 function go(p){
+  window.__page=p;
   document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});
   var el=document.getElementById('page-'+p); if(el) el.classList.add('on');
   document.querySelectorAll('nav [data-go]').forEach(function(a){a.classList.toggle('on',a.dataset.go===p)});
@@ -1078,10 +1083,10 @@ function enterClub(name){
   loginEl.style.display='none';
   document.getElementById('mainNav').classList.remove('hide');
   document.getElementById('studentName').textContent=name;
-  var done=function(){
-    save(); buildAll(); go('home'); sfx.fanfare(); cloudPush();
-  };
-  cloudPull(name).then(done, done);
+  buildAll(); go('home'); sfx.fanfare(); save(); cloudPush();
+  cloudPull(name).then(function(updated){
+    if(updated){ buildAll(); renderTrophies(); go(window.__page||'home'); }
+  });
 }
 document.getElementById('startBtn').onclick=function(){
   var n=document.getElementById('nameInput').value.trim();
