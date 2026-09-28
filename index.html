@@ -446,11 +446,14 @@ function cloudStatus(msg, isErr){
 function cloudPush(){
   if(!SB_ON || !SAVE.name) return;
   cloudStatus('Cloud: saving…', false);
+  var body;
+  try{ body=JSON.stringify([{name:SAVE.name, data:SAVE}]); }
+  catch(e){ cloudStatus('Cloud ERROR (json): '+(e.message||e), true); return; }
   try{
-    sbFetch('students?on_conflict=name', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body: JSON.stringify([{name:SAVE.name, data:SAVE}])})
+    sbFetch('students?on_conflict=name', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body: body})
       .then(function(){ cloudStatus('Cloud: synced ✓', false); SAVE.cloudErr=null; })
-      .catch(function(e){ SAVE.cloudErr=String(e.message||e); cloudStatus('Cloud ERROR: '+SAVE.cloudErr, true); });
-  }catch(e){ SAVE.cloudErr=String(e); cloudStatus('Cloud ERROR: '+SAVE.cloudErr, true); }
+      .catch(function(e){ SAVE.cloudErr=String((e&&e.message)||e); cloudStatus('Cloud ERROR (push): '+SAVE.cloudErr, true); });
+  }catch(e){ SAVE.cloudErr=String((e&&e.message)||e); cloudStatus('Cloud ERROR (push sync): '+SAVE.cloudErr, true); }
 }
 function cloudPull(name){
   if(!SB_ON) return Promise.resolve(false);
@@ -462,7 +465,7 @@ function cloudPull(name){
       cloudStatus('Cloud: loaded ✓', false);
     }
     return updated;
-  }).catch(function(e){ cloudStatus('Cloud ERROR: '+(e.message||e), true); return false; });
+  }).catch(function(e){ cloudStatus('Cloud ERROR (pull): '+((e&&e.message)||e), true); return false; });
 }
 
 /* ================= SOUND ================= */
@@ -529,6 +532,8 @@ document.getElementById('footDonut').src=ASSETS.donut;
 })();
 
 /* ================= TOOLTIP (hover translation) ================= */
+window.addEventListener('error',function(ev){ var el=document.getElementById('cloudStatus'); if(el){ el.textContent='⚠️ JS: '+(ev.message||'error')+' (line '+(ev.lineno||'?')+')'; el.style.color='var(--red)'; } });
+window.addEventListener('unhandledrejection',function(ev){ var el=document.getElementById('cloudStatus'); if(el){ el.textContent='⚠️ Promise: '+((ev.reason&&ev.reason.message)||ev.reason||'error'); el.style.color='var(--red)'; } });
 var tip=document.createElement('div'); tip.className='tip'; document.body.appendChild(tip);
 function showTip(el){
   var txt=el.getAttribute('data-ru'); if(!txt) return;
@@ -1632,7 +1637,7 @@ function enterClub(name){
   });
 }
 document.getElementById('startBtn').onclick=function(){
-  var n=document.getElementById('nameInput').value.trim();
+  var n=document.getElementById('nameInput').value.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/g,'').trim().slice(0,20);
   if(!n){ document.getElementById('nameInput').focus(); return; }
   enterClub(n);
 };
