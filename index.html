@@ -256,6 +256,36 @@ nav .links a.on{background:var(--yellow);border-color:var(--ink)}
 .patternbox .tag{display:inline-block;background:var(--purple);color:#fff;font-weight:800;font-size:12px;border-radius:8px;padding:2px 10px;margin-bottom:6px;letter-spacing:.5px}
 .patternbox .ru{color:#6b6b6b;font-size:13.5px;display:block;margin-top:6px}
 @media (hover:none){ [data-ru]{border-bottom:2px dotted #9a9a9a} }
+
+/* ================= AMERICAN HOLIDAYS (listening, A1) ================= */
+.holgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:20px}
+.holcard{text-align:center;padding:20px 14px;position:relative}
+.holcard .hem{font-size:52px;line-height:1.1}
+.holcard h3{margin:8px 0 4px;font-size:19px}
+.holcard .ru{color:#6b6b6b;font-size:13px}
+.holcard .prog{margin-top:10px;font-weight:800;font-size:13px;background:var(--paper);border:2px solid var(--ink);border-radius:999px;display:inline-block;padding:3px 12px}
+.playerbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--paper);border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(43,43,43,.85);padding:12px 16px;margin:14px 0}
+.playerbar .pbtn{font-size:22px;width:52px;height:52px;border-radius:999px;border:3px solid var(--ink);background:var(--yellow);cursor:pointer;font-weight:800;flex:none}
+.playerbar .pmeta{font-size:14px;color:#555;line-height:1.35}
+.playerbar .pmeta b{color:var(--ink)}
+details.trx{border:3px dashed var(--ink);border-radius:16px;background:#fff;padding:10px 16px;margin:10px 0;font-size:14.5px;line-height:1.6}
+details.trx summary{font-weight:800;cursor:pointer}
+.hsec{font-weight:800;font-size:17px;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+.hsec .tag2{font-size:11px;background:var(--purple);color:#fff;border-radius:8px;padding:2px 10px;letter-spacing:.5px}
+.tfrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:3px solid var(--ink);border-radius:14px;background:#fff;padding:10px 14px;margin-top:8px}
+.tfrow .tst{flex:1;min-width:200px;font-size:15px}
+.tfb{font:inherit;font-weight:800;border:3px solid var(--ink);border-radius:12px;padding:5px 16px;cursor:pointer;background:var(--paper);box-shadow:3px 3px 0 var(--ink)}
+.tfb.ok{background:var(--green)} .tfb.bad{background:var(--red);color:#fff}
+.chip{display:inline-block;font:inherit;font-weight:800;border:3px solid var(--ink);border-radius:12px;background:#fff;padding:5px 14px;cursor:pointer;box-shadow:3px 3px 0 rgba(43,43,43,.85);user-select:none}
+.chip.used{opacity:.25;pointer-events:none}
+.gapx{display:inline-block;min-width:90px;border:3px solid var(--ink);border-radius:10px;background:#fff;margin:0 4px;padding:0 10px;text-align:center;font-weight:800;cursor:pointer}
+.gapx.filled{background:var(--yellow)} .gapx.right{background:var(--green)} .gapx.wrong{background:var(--red);color:#fff}
+.gapsent{font-size:16.5px;line-height:2.1;margin:10px 0}
+.bank{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;padding:12px;border:3px dashed var(--ink);border-radius:14px;background:var(--paper)}
+#holRoot .opt.correct-flash{animation:okflash .5s ease}
+@keyframes okflash{0%{background:var(--green)}100%{background:var(--paper)}}
+.holscore{font-weight:800;font-size:16px}
+
 </style>
 </head>
 <body>
@@ -313,7 +343,7 @@ nav .links a.on{background:var(--yellow);border-color:var(--ink)}
       <div class="card tilt3">
         <h2 data-ru="Что на сайте">What's on the site</h2>
         <div style="font-size:15px;line-height:1.7">
-          <span data-ru="Симпсоны, 1 сезон — все 13 серий: слова, игры, квизы">🍩 <b>The Simpsons</b> · Season 1 — all 13 episodes: vocabulary, games, quizzes</span><br>
+          <span data-ru="Симпсоны, 1 сезон — все 13 серий: слова, игры, квизы">🍩 <b>The Simpsons</b> · Season 1 — all 13 episodes: vocabulary, games, quizzes</span><br><span data-ru="Американские праздники — аудирование для начинающих (A1)">🎧 <b>American Holidays</b> · Listening for beginners (A1)</span><br>
           <span data-ru="Скоро: новые серии">🔜 Coming soon: new episodes</span><br>
           <span data-ru="Скоро: фильмы">🔜 Coming soon: Movies</span><br>
           <span data-ru="Скоро: новый язык!">🔜 Coming soon: a new language!</span>
@@ -349,10 +379,11 @@ nav .links a.on{background:var(--yellow);border-color:var(--ink)}
         <div class="ru" data-ru="1 сезон · все 13 серий уже ждут">Season 1 · all 13 episodes live</div>
         <div style="margin-top:12px"><button class="btn yellow" data-go="simpsons" data-ru="Открыть">Open</button></div>
       </div>
-      <div class="card sercard off tilt2">
-        <div style="font-size:64px;line-height:1.1">?</div>
-        <h3 style="color:#888">Coming soon</h3>
-        <div class="ru">A new show is on the way</div>
+      <div class="card sercard tilt2">
+        <div style="font-size:64px;line-height:1.1">🎧</div>
+        <h3>American Holidays</h3>
+        <div class="ru" data-ru="Аудирование, уровень A1 · 5 модулей">Listening · A1 · 5 modules</div>
+        <div style="margin-top:12px"><button class="btn green" data-go="listening" data-ru="Открыть">Open</button></div>
       </div>
       <div class="card sercard off tilt3">
         <div style="font-size:64px;line-height:1.1">?</div>
@@ -392,6 +423,28 @@ nav .links a.on{background:var(--yellow);border-color:var(--ink)}
   <!-- ============ EPISODE PAGES (built by JS) ============ -->
   <div class="page" id="page-ep1"><div id="ep1-root"></div></div>
   <div class="page" id="page-ep2"><div id="ep2-root"></div></div>
+
+
+  <!-- ============ LISTENING: AMERICAN HOLIDAYS ============ -->
+  <div class="page" id="page-listening">
+    <div class="pgbtn"><span></span><button class="btn ghost" data-go="home" data-ru="На главную">← Home</button></div>
+    <div class="stitle green" data-ru="Аудирование · уровень A1">Listening · American Holidays</div>
+    <div class="sub" data-ru="Пять коротких текстов о праздниках США: слова, аудио и задания с автопроверкой. Один модуль — одно занятие.">
+      Five short texts about US holidays: vocabulary, audio and auto-checked tasks. One module = one lesson.</div>
+    <div class="card tilt3" style="margin-bottom:18px">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="font-size:34px">🎧</div>
+        <div style="font-size:14.5px;line-height:1.5;flex:1;min-width:220px">
+          <b>How it works:</b> 1) learn the words → 2) listen and do the tasks → 3) answer and retell.
+          <span class="ru" style="display:block;color:#6b6b6b;font-size:13px">Как работать: выучи слова → послушай и выполни задания → ответь и перескажи.</span>
+        </div>
+      </div>
+    </div>
+    <div class="holgrid" id="holGrid"></div>
+  </div>
+
+  <!-- ============ HOLIDAY MODULE ============ -->
+  <div class="page" id="page-hol"><div id="holRoot"></div></div>
 
   <!-- ============ TROPHY ROOM (footer page area) ============ -->
   <div class="page" id="page-trophies">
@@ -1700,5 +1753,256 @@ sBtn.onclick=function(){ SAVE.muted=!SAVE.muted; save(); sLabel(); if(!SAVE.mute
 /* ================= INIT ================= */
 if(SAVE.name){ enterClub(SAVE.name); } else { document.getElementById('nameInput').focus(); }
 </script>
+
+<script>
+/* ================= AMERICAN HOLIDAYS · Listening A1 =================
+   Методический комплекс: Савинкова А.А., ИАР «Методика обучения аудированию...» (ЧелГУ, 2026)
+   Модель: pre-listening -> while-listening -> post-listening */
+if(!SAVE.hol) SAVE.hol={};
+
+var HOLIDAYS={
+thanksgiving:{emoji:"🦃",name:"Thanksgiving",ru:"День Благодарения",color:"var(--orange)",
+ vocab:[["harvest","урожай"],["feast","праздничный пир"],["settler","поселенец"],["grateful","благодарный"],["turkey","индейка"],["pumpkin pie","тыквенный пирог"],["parade","парад"],["charity","благотворительность"],["mashed potatoes","картофельное пюре"]],
+ discuss:[["Do you know Thanksgiving? When is it?","Ты знаешь День Благодарения? Когда он?"],["What do people eat on Thanksgiving?","Что едят в этот день?"],["Why do Americans celebrate this holiday?","Почему американцы его отмечают?"]],
+ text:"Thanksgiving is a national holiday in the United States. People celebrate it on the fourth Thursday of November. The first Thanksgiving was in 1621. English settlers came to America. They had a very hard first winter. Many people died. The next year, Native Americans helped them. They taught the settlers to grow corn, pumpkins and beans. In the autumn, the settlers had a big harvest. They were happy. They had a feast. They invited the Native Americans to share the food. Today, Thanksgiving is a time for family. People travel to be with their families. They have a big dinner together. The traditional food is turkey, mashed potatoes, and pumpkin pie. People also watch parades and American football on TV. Many people do charity work on Thanksgiving. They give food to poor people. They help others who are not lucky. Thanksgiving is a time to be grateful. People say thank you for their family, their friends, and their good health.",
+ mc:[{q:"Thanksgiving is celebrated in…",ru:"День Благодарения отмечается в…",opts:["October","November","December"],a:1},
+     {q:"People eat … on Thanksgiving.",ru:"В этот день едят…",opts:["turkey and pumpkin pie","chicken and cake","fish and chips"],a:0},
+     {q:"The first Thanksgiving was in …",ru:"Первый День Благодарения был в…",opts:["1492","1621","1776"],a:1}],
+ tf:[["Thanksgiving is only celebrated in the USA.",false],["Families usually have a big dinner on Thanksgiving.",true],["People watch football on Thanksgiving.",true],["Thanksgiving is in July.",false]],
+ gap:null,
+ post:[["When is Thanksgiving?","Когда отмечается?"],["What do people eat on Thanksgiving?","Что едят?"],["Do you have a similar holiday in your country?","Есть ли похожий праздник в твоей стране?"]],
+ retell:["Tell your teacher what you have learned about Thanksgiving.","Перескажи учителю, что узнал о Дне Благодарения."]},
+
+halloween:{emoji:"🎃",name:"Halloween",ru:"Хэллоуин",color:"var(--purple)",
+ vocab:[["ghost","призрак"],["witch","ведьма"],["costume","костюм"],["jack-o-lantern","светильник из тыквы"],["trick-or-treat","«сладость или гадость»"],["candy","конфеты"],["haunted house","дом с привидениями"],["spooky","жуткий"],["vampire","вампир"],["skeleton","скелет"]],
+ discuss:[["Do you know Halloween? When is it?","Ты знаешь Хэллоуин? Когда он?"],["What do children do on Halloween?","Что делают дети?"],["What costumes do people wear?","В какие костюмы наряжаются?"]],
+ text:"Halloween is on 31 October. It is a fun holiday for children and adults. On Halloween, children wear costumes. They dress up as ghosts, witches, vampires, or skeletons. They go from house to house and say: Trick or treat! People give them candy. People also decorate their houses. They put jack-o-lanterns on their doors. A jack-o-lantern is a pumpkin with a face. People cut eyes and a mouth in the pumpkin. They put a candle inside. It looks very spooky. Many people visit haunted houses. These are houses with actors in scary costumes. Some people watch horror films on TV. Halloween is a holiday for fun and fear. It is a time to be silly and brave.",
+ mc:[{q:"Halloween is celebrated on …",ru:"Хэллоуин отмечается…",opts:["31 October","31 December","31 November"],a:0},
+     {q:"Children say: …",ru:"Дети говорят:…",opts:["Trick or treat!","Hello!","Give me candy!"],a:0},
+     {q:"People make … from pumpkins.",ru:"Из тыкв делают…",opts:["soup","jack-o-lanterns","bread"],a:1}],
+ tf:null,
+ gap:{words:["adults","costumes","jack-o-lanterns"],
+      sents:["Halloween is a holiday for children and ___.","Children wear ___.","People decorate their houses with ___."]},
+ post:[["When is Halloween?","Когда Хэллоуин?"],["What do children do on Halloween?","Что делают дети?"],["What do people make from pumpkins?","Что делают из тыкв?"]],
+ retell:["Tell your teacher about Halloween.","Расскажи учителю о Хэллоуине."]},
+
+christmas:{emoji:"🎄",name:"Christmas in the USA",ru:"Рождество в США",color:"var(--red)",
+ vocab:[["celebrate","праздновать"],["decorate","украшать"],["Christmas tree","рождественская ёлка"],["ornaments","украшения"],["Santa Claus","Санта-Клаус"],["fireplace","камин"],["stockings","носочки"],["cookies","печенье"],["gifts","подарки"],["kindness","доброта"]],
+ discuss:[["Do you know Christmas? When is it?","Ты знаешь Рождество? Когда оно?"],["What do people do before Christmas?","Что делают перед Рождеством?"],["What do children ask Santa Claus for?","О чём просят Санту дети?"]],
+ text:"Christmas is on 25 December. It is a very important holiday in the United States. People celebrate Christmas with their families. Before Christmas, people decorate their houses. They put up a Christmas tree. They put colorful lights and ornaments on the tree. Some people hang stockings on the fireplace. They say that Santa Claus comes down the chimney at night and fills the stockings with gifts. Children write letters to Santa Claus. They ask for toys and gifts. On Christmas Eve, they put out cookies and milk for Santa. In the morning, they open their gifts. The traditional Christmas dinner is turkey or ham. People also eat mashed potatoes, vegetables, and special desserts like pumpkin pie or apple pie. For many people, Christmas is about kindness. They send cards to friends and family. They give gifts to people who need help.",
+ mc:[{q:"Christmas is on …",ru:"Рождество…",opts:["25 December","1 January","25 November"],a:0},
+     {q:"Children write letters to …",ru:"Дети пишут письма…",opts:["their parents","Santa Claus","their friends"],a:1},
+     {q:"The traditional Christmas dinner is …",ru:"Традиционный ужин — это…",opts:["turkey or ham","fish and chips","pizza"],a:0}],
+ tf:null,
+ gap:{words:["lights","chimney","help"],
+      sents:["People put ___ and ornaments on the Christmas tree.","Santa Claus comes down the ___.","People give gifts to people who need ___."]},
+ post:[["When is Christmas?","Когда Рождество?"],["What do children put out for Santa?","Что дети оставляют для Санты?"],["What is the traditional Christmas dinner?","Какой традиционный ужин?"]],
+ retell:["Tell your teacher about Christmas traditions in the USA.","Расскажи о рождественских традициях в США."]},
+
+independence:{emoji:"🎆",name:"Independence Day",ru:"День Независимости",color:"var(--blue)",
+ vocab:[["declare","провозглашать"],["independence","независимость"],["fireworks","фейерверки"],["parade","парад"],["picnic","пикник"],["flag","флаг"],["celebrate","праздновать"],["barbecue","барбекю"],["patriotism","патриотизм"]],
+ discuss:[["Do you know Independence Day? When is it?","Ты знаешь День Независимости? Когда он?"],["What do people do on 4 July?","Что делают 4 июля?"],["What colors do people wear?","В какие цвета наряжаются?"]],
+ text:"Independence Day is on 4 July. It is the birthday of the United States. On 4 July 1776, the American colonies declared independence from Great Britain. Today, people celebrate this day with parades, fireworks, and picnics. In the morning, many towns have a parade. People wear red, white, and blue clothes. They wave American flags. In the afternoon, families have picnics or barbecues. They cook hamburgers and hot dogs. They eat watermelon and drink lemonade. In the evening, there are big fireworks shows. The fireworks are very beautiful. People watch them in parks or on beaches. They say ooh and aah at the bright lights. People also decorate their houses with flags and balloons. It is a day of fun, food, and patriotism.",
+ mc:[{q:"Independence Day is on …",ru:"День Независимости…",opts:["4 July","4 November","4 December"],a:0},
+     {q:"The colonies declared independence in …",ru:"Независимость провозгласили в…",opts:["1492","1621","1776"],a:2},
+     {q:"In the evening, people watch …",ru:"Вечером люди смотрят…",opts:["fireworks","football","films"],a:0}],
+ tf:[["People wear red, white, and blue clothes.",true],["Families have picnics in the afternoon.",true],["Fireworks are in the morning.",false],["Independence Day is in March.",false]],
+ gap:null,
+ post:[["When is Independence Day?","Когда этот день?"],["What do people eat on 4 July?","Что едят?"],["What do people watch in the evening?","Что смотрят вечером?"]],
+ retell:["Tell your teacher about Independence Day.","Расскажи о Дне Независимости."]},
+
+easter:{emoji:"🐰",name:"Easter in America",ru:"Пасха в Америке",color:"var(--pink)",
+ vocab:[["Easter","Пасха"],["bunny","кролик"],["egg hunt","охота за яйцами"],["chocolate","шоколад"],["basket","корзинка"],["bonnet","женская шляпка"],["resurrection","воскресение"],["tradition","традиция"]],
+ discuss:[["Do you know Easter? When is it?","Ты знаешь Пасху? Когда она?"],["What do children do on Easter?","Что делают дети?"],["What do people eat on Easter?","Что едят на Пасху?"]],
+ text:"Easter is a Christian holiday. It celebrates the resurrection of Jesus Christ. But for many people, Easter is about spring, family, and fun. Easter is always on a Sunday in March or April. Before Easter, people decorate eggs. They paint them bright colours and put patterns on them. They also buy chocolate eggs and candy. On Easter morning, many children wake up early. They look for baskets of candy. The Easter Bunny hides these baskets. Then children go outside for an Easter egg hunt. They search for eggs in the garden or in the park. People also have a big Easter dinner. They eat ham, vegetables, and special bread. Some women wear bonnets on Easter Sunday. This is an old tradition in America. People also go to church on Easter Sunday. Easter is a holiday of new life and joy.",
+ mc:[{q:"Easter is always on a …",ru:"Пасха всегда в…",opts:["Sunday","Monday","Friday"],a:0},
+     {q:"The Easter Bunny hides …",ru:"Пасхальный кролик прячет…",opts:["eggs","baskets of candy","gifts"],a:1},
+     {q:"Children go outside for …",ru:"Дети выходят на улицу…",opts:["a party","an Easter egg hunt","a picnic"],a:1}],
+ tf:null,
+ gap:{words:["bright","baskets","meal"],
+      sents:["People decorate eggs with ___ colours.","The Easter Bunny hides ___ of candy.","People have a big Easter ___."]},
+ post:[["When is Easter?","Когда Пасха?"],["What does the Easter Bunny do?","Что делает кролик?"],["What do people eat on Easter?","Что едят на Пасху?"]],
+ retell:["Tell your teacher about Easter traditions in the USA.","Расскажи о пасхальных традициях в США."]}
+};
+var HOL_ORDER=["thanksgiving","halloween","christmas","independence","easter"];
+
+function holState(id){ if(!SAVE.hol[id]) SAVE.hol[id]={pts:0,done:{},pred:"",retell:""}; return SAVE.hol[id]; }
+function holMax(h){ return h.mc.length + (h.tf?h.tf.length:0) + (h.gap?h.gap.words.length:0); }
+
+/* ---------- hub ---------- */
+function buildHolHub(){
+  var g=document.getElementById('holGrid'); if(!g) return; g.innerHTML='';
+  HOL_ORDER.forEach(function(id,i){
+    var h=HOLIDAYS[id], st=holState(id), max=holMax(h);
+    var card=document.createElement('div'); card.className='card holcard tilt'+((i%3)+1);
+    card.innerHTML='<div class="hem">'+h.emoji+'</div><h3>'+h.name+'</h3><div class="ru" data-ru="'+esc(h.ru)+'">'+h.ru+'</div>'
+      +'<div style="margin-top:10px"><button class="btn '+(i%2?'yellow':'green')+'">Open · Открыть</button></div>'
+      +'<div class="prog">'+(st.pts>=max?'🏆 '+max+'/'+max:'🍩 '+st.pts+' / '+max)+'</div>';
+    card.querySelector('button').onclick=function(){ openHol(id); };
+    g.appendChild(card);
+  });
+}
+
+/* ---------- audio: file audio/<id>.mp3 if present, else browser TTS ---------- */
+function playHol(id, btn){
+  var old=btn.textContent; btn.textContent='⏳';
+  var useTTS=function(){
+    try{
+      var u=new SpeechSynthesisUtterance(HOLIDAYS[id].text);
+      u.lang='en-US'; u.rate=0.85;
+      var vs=speechSynthesis.getVoices();
+      var v=vs.filter(function(x){return /^en(-|_)US/i.test(x.lang)})[0]||vs.filter(function(x){return /^en/i.test(x.lang)})[0];
+      if(v) u.voice=v;
+      u.onend=function(){btn.textContent=old}; u.onerror=function(){btn.textContent=old};
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+      btn.textContent='🔊';
+    }catch(e){ btn.textContent=old; }
+  };
+  try{
+    fetch('audio/'+id+'.mp3',{method:'HEAD'}).then(function(r){
+      if(r.ok){ var a=new Audio('audio/'+id+'.mp3'); a.play(); btn.textContent='🔊';
+        a.onended=function(){btn.textContent=old}; a.onerror=useTTS; }
+      else useTTS();
+    }).catch(useTTS);
+  }catch(e){ useTTS(); }
+}
+
+/* ---------- module page ---------- */
+function openHol(id){
+  var h=HOLIDAYS[id], st=holState(id), max=holMax(h), root=document.getElementById('holRoot');
+  var i, html='';
+  html+='<div class="pgbtn"><button class="btn ghost" data-go="listening">← Listening</button><span></span></div>';
+  html+='<div class="bread"><a data-go="home">Home</a> › <a data-go="listening">Listening</a> › '+h.name+'</div>';
+  html+='<div class="stitle" style="background:'+h.color+';'+(h.color==='var(--purple)'||h.color==='var(--red)'||h.color==='var(--blue)'?'color:#fff;':'')+'">'+h.emoji+' '+h.name+'</div>';
+  html+='<div class="ep-ru" data-ru="'+esc(h.ru)+'">'+h.ru+' · listening · level A1</div>';
+  html+='<div class="tabs">'
+    +'<button class="ett on" data-tab="pre">1 · Before listening</button>'
+    +'<button class="ett" data-tab="while">2 · While listening</button>'
+    +'<button class="ett" data-tab="post">3 · After listening</button></div>';
+
+  /* ---- TAB 1: PRE ---- */
+  html+='<div class="etpane on" data-pane="pre">';
+  html+='<div class="hsec">🗣️ Discussion <span class="tag2">PRE-LISTENING</span></div>';
+  html+='<div class="grid" style="gap:10px">';
+  h.discuss.forEach(function(d){ html+='<div class="card teaser"><div class="qm">?</div><div data-ru="'+esc(d[1])+'">'+esc(d[0])+'</div></div>'; });
+  html+='</div>';
+  html+='<div class="hsec">🃏 New words <span class="tag2">нажми, чтобы перевернуть</span></div>';
+  html+='<div class="vocab">';
+  h.vocab.forEach(function(w){ html+='<div class="vc"><div class="vc-in"><div class="f"><span class="en">'+esc(w[0])+'</span><span class="tip" style="position:static;display:block;border:none;box-shadow:none;background:none;color:#888">tap to flip</span></div><div class="f back"><span class="ru">'+esc(w[1])+'</span></div></div></div>'; });
+  html+='</div>';
+  html+='<div class="hsec">🔮 Prediction</div><div class="small" style="margin-bottom:6px" data-ru="Посмотри на слова: что расскажет текст? Напиши 1–2 предложения.">Look at the words: what will the text be about? Write 1–2 sentences.</div>';
+  html+='<textarea id="holPred" placeholder="I think this text is about…">'+esc(st.pred||'')+'</textarea>';
+  html+='</div>';
+
+  /* ---- TAB 2: WHILE ---- */
+  html+='<div class="etpane" data-pane="while">';
+  html+='<div class="playerbar"><button class="pbtn" id="holPlay">▶️</button><div class="pmeta"><b>Listen to the text</b> · ~2 min · slow English<br><span data-ru="Прослушай текст 1–2 раза, затем выполни задания. Здесь задания с автопроверкой!">Listen 1–2 times, then do the tasks. Auto-checking here!</span></div>'
+    +'<span class="holscore">🍩 <span id="holPts">'+st.pts+'</span> / '+max+'</span></div>';
+  html+='<details class="trx"><summary>📄 Transcript · Транскрипт</summary><p>'+esc(h.text)+'</p></details>';
+
+  html+='<div class="hsec">✅ Task 1. Choose the correct answer</div>';
+  h.mc.forEach(function(m,qi){
+    html+='<div class="quiz-q" data-grp="mc'+qi+'"><div class="qq">'+esc(m.q)+'</div><div class="qr" data-ru="'+esc(m.ru)+'">'+esc(m.ru)+'</div>';
+    m.opts.forEach(function(o,oi){ html+='<div class="opt" data-q="mc'+qi+'" data-i="'+oi+'">'+esc(o)+'</div>'; });
+    html+='</div>';
+  });
+
+  if(h.tf){
+    html+='<div class="hsec">✅ Task 2. True or False?</div>';
+    h.tf.forEach(function(t,ti){ html+='<div class="tfrow" data-grp="tf'+ti+'"><div class="tst" data-ru="Верно или неверно?">'+esc(t[0])+'</div><button class="tfb" data-q="tf'+ti+'" data-v="1">True</button><button class="tfb" data-q="tf'+ti+'" data-v="0">False</button></div>'; });
+  }
+  if(h.gap){
+    html+='<div class="hsec">✅ Task 2. Fill in the gaps</div><div class="small" style="margin-bottom:4px" data-ru="Нажми на слово из банка, затем на пропуск. Проверь себя кнопкой.">Tap a word from the bank, then tap a gap. Press Check.</div>';
+    html+='<div class="bank">'; h.gap.words.forEach(function(w){ html+='<span class="chip" data-w="'+esc(w)+'">'+esc(w)+'</span>'; }); html+='</div>';
+    h.gap.sents.forEach(function(s,gi){ html+='<div class="gapsent">'+esc(s.split('___')[0])+'<span class="gapx" data-g="'+gi+'">&nbsp;</span>'+esc(s.split('___')[1]||'')+'</div>'; });
+    html+='<button class="btn blue" id="gapCheck" style="margin-top:8px">Check · Проверить</button>';
+  }
+  html+='</div>';
+
+  /* ---- TAB 3: POST ---- */
+  html+='<div class="etpane" data-pane="post">';
+  html+='<div class="hsec">💬 Answer the questions <span class="tag2">POST-LISTENING</span></div><div class="grid" style="gap:10px">';
+  h.post.forEach(function(p){ html+='<div class="card teaser"><div class="qm">💬</div><div data-ru="'+esc(p[1])+'">'+esc(p[0])+'</div></div>'; });
+  html+='</div>';
+  html+='<div class="hsec">📣 Retell the story</div><div class="small" style="margin-bottom:6px" data-ru="'+esc(h.retell[1])+'">'+esc(h.retell[0])+'</div>';
+  html+='<textarea id="holRetell" placeholder="Retell the text in 4–6 sentences…">'+esc(st.retell||'')+'</textarea>';
+  html+='<div class="small" style="margin-top:6px" data-ru="Ответ учителю на занятии — устно. Это поле черновик.">Tell your teacher at the lesson — aloud. This box is a draft.</div>';
+  html+='</div>';
+
+  root.innerHTML=html;
+  root.querySelectorAll('.bread a[data-go]').forEach(function(a){ a.onclick=function(){ go(a.dataset.go); }; });
+  root.querySelectorAll('[data-go]').forEach(function(a){ if(!a.onclick) a.addEventListener('click',function(){ go(a.dataset.go); }); });
+
+  /* tabs */
+  root.querySelectorAll('.ett').forEach(function(b){ b.onclick=function(){
+    root.querySelectorAll('.ett').forEach(function(x){x.classList.remove('on')}); b.classList.add('on');
+    root.querySelectorAll('.etpane').forEach(function(p){ p.classList.toggle('on', p.dataset.pane===b.dataset.tab); });
+    sfx.pop();
+  };});
+
+  /* vocab flip */
+  root.querySelectorAll('.vc').forEach(function(c){ c.onclick=function(){ c.classList.toggle('flipped'); sfx.flip(); }; });
+
+  /* prediction + retell autosave */
+  root.querySelector('#holPred').addEventListener('input',function(e){ st.pred=e.target.value; save(); });
+  root.querySelector('#holRetell').addEventListener('input',function(e){ st.retell=e.target.value; save(); });
+
+  /* player */
+  root.querySelector('#holPlay').onclick=function(){ playHol(id,this); };
+
+  /* scoring */
+  var addPt=function(grp){
+    if(st.done[grp]) return 0;
+    st.done[grp]=1; st.pts++; save();
+    var el=root.querySelector('#holPts'); if(el) el.textContent=st.pts;
+    if(st.pts>=max){ sfx.fanfare(); } else sfx.correct();
+    buildHolHub(); return 1;
+  };
+  root.querySelectorAll('.opt').forEach(function(o){ o.onclick=function(){
+    var grp=o.dataset.q, qi=+grp.slice(2);
+    if(st.done[grp]) return;
+    if(+o.dataset.i===h.mc[qi].a){ o.classList.add('ok'); addPt(grp); }
+    else { o.classList.add('bad'); sfx.wrong(); }
+  };});
+  root.querySelectorAll('.tfb').forEach(function(b){ b.onclick=function(){
+    var grp=b.dataset.q, ti=+grp.slice(2);
+    if(st.done[grp]) return;
+    var correct=((b.dataset.v==='1')===h.tf[ti][1]);
+    if(correct){ b.classList.add('ok'); addPt(grp); }
+    else { b.classList.add('bad'); sfx.wrong(); }
+  };});
+  var gapFill=root.querySelectorAll('.gapx'), chips=root.querySelectorAll('.chip');
+  chips.forEach(function(ch){ ch.onclick=function(){
+    for(var k=0;k<gapFill.length;k++){ if(!gapFill[k].dataset.w){ gapFill[k].dataset.w=ch.dataset.w; gapFill[k].textContent=ch.dataset.w; gapFill[k].classList.add('filled'); ch.classList.add('used'); sfx.pop(); return; } }
+  };});
+  gapFill.forEach(function(gp){ gp.onclick=function(){ if(gp.dataset.w){ var ch=[].find.call(chips,function(c){return c.dataset.w===gp.dataset.w&&!c.classList.contains('used')}); if(ch) ch.classList.remove('used'); delete gp.dataset.w; gp.innerHTML='&nbsp;'; gp.classList.remove('filled'); } }; });
+  var gc=root.querySelector('#gapCheck'); if(gc) gc.onclick=function(){
+    var all=true;
+    gapFill.forEach(function(gp,gi){
+      gp.classList.remove('right','wrong');
+      var grp='gap'+gi;
+      if(gp.dataset.w===h.gap.words[gi]){ gp.classList.add('right'); addPt(grp); }
+      else { gp.classList.add('wrong'); all=false; }
+    });
+    if(!all) sfx.wrong();
+  };
+
+  go('hol');
+}
+
+/* ---------- nav link ---------- */
+(function(){
+  var links=document.querySelector('nav .links');
+  if(links && !links.querySelector('a[data-go="listening"]')){
+    var a=document.createElement('a'); a.dataset.go='listening'; a.textContent='🎧 Listening'; a.setAttribute('data-ru','Аудирование: праздники США');
+    var tr=links.querySelector('a[data-go="trophies"]');
+    if(tr) links.insertBefore(a,tr); else links.appendChild(a);
+    a.addEventListener('click',function(){ go('listening'); });
+  }
+  buildHolHub();
+  var mo=new MutationObserver(function(){ if(window.__page==='listening') buildHolHub(); });
+})();
+</script>
+
 </body>
 </html>
