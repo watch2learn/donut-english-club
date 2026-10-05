@@ -371,6 +371,9 @@ body[data-world="gf"] .card .small,body[data-world="gf"] .quiz-q .small{color:#5
       <span data-ru="Привет! Я Пончик! Как тебя зовут?">Hi! I'm <b>Sprinkles</b>! What's your name?</span>
     </div>
     <div class="namewrap"><input id="nameInput" maxlength="20" placeholder="Your name" autocomplete="off"></div>
+    <div class="namewrap" style="margin-top:10px"><input id="codeInput" maxlength="20" placeholder="Club code · Код клуба" autocomplete="off" style="font-size:16px"></div>
+    <div class="small" style="margin-top:4px" data-ru="Спроси код у Арины">Ask Arina for the code · Спроси код у Арины</div>
+    <div id="codeState" style="font-weight:800;color:var(--red);margin-top:6px;min-height:22px"></div>
     <button class="btn yellow" id="startBtn" style="font-size:20px" data-ru="Поехали!">Let's go!</button>
   </div>
 </div>
@@ -578,6 +581,7 @@ function save(){
   clearTimeout(window.__sbTimer);
   window.__sbTimer = setTimeout(cloudPush, 600);
 }
+var CLUB_CODE='DONUT26';
 var SB_URL='https://camsagasrpijnpcjaqwa.supabase.co';
 var SB_KEY='sb_publishable_M8jFhtjYxEKTzpEbUVUWsA_TVw99sEb';
 var SB_ON=true;
@@ -2113,9 +2117,14 @@ function enterClub(name){
 document.getElementById('startBtn').onclick=function(){
   var n=document.getElementById('nameInput').value.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/g,'').trim().slice(0,20);
   if(!n){ document.getElementById('nameInput').focus(); return; }
+  var c=document.getElementById('codeInput').value.trim().toUpperCase();
+  var cs=document.getElementById('codeState');
+  if(c!==CLUB_CODE){ cs.textContent='Wrong code · Неверный код. Ask Arina!'; sfx.wrong(); return; }
+  cs.textContent='';
   enterClub(n);
 };
 document.getElementById('nameInput').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('startBtn').click(); });
+document.getElementById('codeInput').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('startBtn').click(); });
 
 /* ================= ADMIN (?admin=watch2learn) ================= */
 (function(){
