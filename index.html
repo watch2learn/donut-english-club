@@ -359,6 +359,34 @@ body[data-world="gf"] .warmq .ru{color:#555}
 
 body[data-world="gf"] nav .brand,body[data-world="gf"] nav .brand span{color:#eef}
 body[data-world="gf"] .card .small,body[data-world="gf"] .quiz-q .small{color:#555}
+
+/* ================= HOLIDAY WORLDS 2.0 ================= */
+.holcard .hem{font-size:52px;line-height:1.1}
+.efall{position:absolute;top:-50px;animation:sfall linear infinite;opacity:.9;pointer-events:none}
+body[data-world="hol_thanksgiving"]{background:linear-gradient(180deg,#ffe9c9,#ffd9a8 55%,#ffcf96)}
+body[data-world="hol_thanksgiving"] .stitle{background:#e08a2e;color:#fff}
+body[data-world="hol_christmas"]{background:linear-gradient(180deg,#d8ecff,#eef8ff 45%,#ffffff)}
+body[data-world="hol_christmas"] .stitle{background:#d64545;color:#fff}
+body[data-world="hol_easter"]{background:linear-gradient(180deg,#ffeef5,#fff6fa 50%,#edfff3)}
+body[data-world="hol_easter"] .stitle{background:#ff9ecb;color:#fff}
+body[data-world="hol_halloween"]{background:linear-gradient(180deg,#191028,#2a1740 60%,#190f2c);color:#f0eaff}
+body[data-world="hol_halloween"] .card,body[data-world="hol_halloween"] .quiz-q{background:#f4efff;color:#222}
+body[data-world="hol_halloween"] .stitle{background:#ff8c42;color:#2a1740;box-shadow:6px 6px 0 #0d0716}
+body[data-world="hol_halloween"] nav{background:#140b24;border-bottom-color:#0a0512}
+body[data-world="hol_halloween"] nav .links a,body[data-world="hol_halloween"] nav .brand,body[data-world="hol_halloween"] nav .brand span{color:#e7dcff}
+body[data-world="hol_halloween"] footer{background:#140b24;color:#e7dcff}
+body[data-world="hol_halloween"] .small,body[data-world="hol_halloween"] .sub,body[data-world="hol_halloween"] .ep-ru,body[data-world="hol_halloween"] .pmeta{color:#a99cc9}
+body[data-world="hol_halloween"] .vc .f,body[data-world="hol_halloween"] .opt,body[data-world="hol_halloween"] .gapword,body[data-world="hol_halloween"] .lword,body[data-world="hol_halloween"] .bank,body[data-world="hol_halloween"] .patternbox,body[data-world="hol_halloween"] .playerbar,body[data-world="hol_halloween"] .pbtn,body[data-world="hol_halloween"] .tfb,body[data-world="hol_halloween"] .speakcard,body[data-world="hol_halloween"] .ordnum{color:#222}
+body[data-world="hol_halloween"] .bread{color:#a99cc9}
+body[data-world="hol_independence"]{background:linear-gradient(180deg,#101a45,#1b2a6b 60%,#12204f);color:#eef}
+body[data-world="hol_independence"] .card,body[data-world="hol_independence"] .quiz-q{background:#f2f4ff;color:#222}
+body[data-world="hol_independence"] .stitle{background:#b22234;color:#fff;box-shadow:6px 6px 0 #0a1030}
+body[data-world="hol_independence"] nav{background:#0d1437;border-bottom-color:#070b22}
+body[data-world="hol_independence"] nav .links a,body[data-world="hol_independence"] nav .brand,body[data-world="hol_independence"] nav .brand span{color:#dfe4ff}
+body[data-world="hol_independence"] footer{background:#0d1437;color:#dfe4ff}
+body[data-world="hol_independence"] .small,body[data-world="hol_independence"] .sub,body[data-world="hol_independence"] .ep-ru,body[data-world="hol_independence"] .pmeta{color:#9aa5d8}
+body[data-world="hol_independence"] .vc .f,body[data-world="hol_independence"] .opt,body[data-world="hol_independence"] .gapword,body[data-world="hol_independence"] .lword,body[data-world="hol_independence"] .bank,body[data-world="hol_independence"] .patternbox,body[data-world="hol_independence"] .playerbar,body[data-world="hol_independence"] .pbtn,body[data-world="hol_independence"] .tfb,body[data-world="hol_independence"] .speakcard,body[data-world="hol_independence"] .ordnum{color:#222}
+body[data-world="hol_independence"] .bread{color:#9aa5d8}
 </style>
 </head>
 <body>
@@ -714,6 +742,8 @@ document.addEventListener('click',function(e){
 /* ================= ROUTER ================= */
 function go(p){
   window.__page=p;
+  try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  try{ if(window.HOLP&&HOLP.audio){ HOLP.audio.pause(); HOLP.playing=false; } }catch(e){}
   document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});
   var el=document.getElementById('page-'+p); if(el) el.classList.add('on');
   document.querySelectorAll('nav [data-go]').forEach(function(a){a.classList.toggle('on',a.dataset.go===p)});
@@ -746,6 +776,15 @@ function renderDeco(world){
     h+='<div class="moon"></div>';
     h+='<div class="pines dsk">'+PINES_SVG+'</div>';
     for(ff=0;ff<12;ff++){ h+='<div class="firefly" style="left:'+(5+Math.random()*90)+'vw;top:'+(35+Math.random()*45)+'vh;animation-duration:'+(4+Math.random()*5)+'s;animation-delay:-'+(Math.random()*5)+'s"></div>'; }
+  } else if(world.indexOf('hol_')===0){
+    var hd=world.slice(4);
+    var map={thanksgiving:['🍂','🍁','🌽','🍂'],halloween:['🦇','🕷️','🎃','🦇','👻'],christmas:['❄️','❄️','❄️','⛄'],independence:['✨','🎆','⭐','✨'],easter:['🌸','🌷','🐣','🌸']};
+    var set=map[hd]||['🎈'];
+    if(hd==='halloween'||hd==='independence'){
+      if(hd==='halloween') h+='<div class="moon"></div>';
+      for(var hs=0;hs<45;hs++){ var hz=(Math.random()*2.2+1).toFixed(1); h+='<div class="star" style="left:'+(Math.random()*100)+'vw;top:'+(Math.random()*55)+'vh;width:'+hz+'px;height:'+hz+'px;animation-duration:'+(2+Math.random()*3)+'s;animation-delay:-'+(Math.random()*3)+'s"></div>'; }
+    }
+    for(var hf=0;hf<12;hf++){ h+='<div class="efall" style="left:'+(Math.random()*100)+'vw;font-size:'+(18+Math.random()*14)+'px;animation-duration:'+(9+Math.random()*10)+'s;animation-delay:-'+(Math.random()*12)+'s">'+set[hf%set.length]+'</div>'; }
   } else {
     for(s=0;s<8;s++){ h+='<div class="sprinklefall" style="left:'+(Math.random()*100)+'vw;animation-duration:'+(8+Math.random()*10)+'s;animation-delay:-'+(Math.random()*10)+'s;background:'+colors[s%3]+'"></div>'; }
   }
@@ -1736,7 +1775,7 @@ function roundMC(id, items, title, how){
     it.o.forEach(function(opt,oi){ h+='<label class="opt"><input type="radio" name="mc'+qi+'" value="'+oi+'" style="margin-right:9px">'+esc(opt)+'</label>'; });
     h+='</div>';
   });
-  h+='<div class="quiz-foot"><button class="btn pink" id="mcCheck" style="color:#fff">Check · Проверить</button><button class="btn yellow hide" id="mcNext">Next round → · Дальше →</button><span id="mcFb" style="font-weight:800"></span></div>';
+  h+='<div class="quiz-foot"><button class="btn pink" id="mcCheck" style="color:#fff">Check</button><button class="btn yellow hide" id="mcNext">Next round → · Дальше →</button><span id="mcFb" style="font-weight:800"></span></div>';
   el.innerHTML=h;
   document.getElementById('mcCheck').onclick=function(){
     var got=0;
@@ -1763,7 +1802,7 @@ function roundOrder(id){
   for(var i=idx.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=idx[i]; idx[i]=idx[j]; idx[j]=t; }
   var h=gameHead(G,'Story in order · Собери сюжет','Click the events in the right order. · Нажимай на события в правильном порядке.');
   idx.forEach(function(n){ h+='<div class="card ordcard" data-n="'+n+'" style="margin-bottom:8px;padding:10px 16px"><span class="ordnum"></span><div>'+ep.order[n].en+'<div class="ru" style="font-size:12.5px;color:#777">'+ep.order[n].ru+'</div></div></div>'; });
-  h+='<div class="quiz-foot"><button class="btn pink" id="ordCheck" style="color:#fff">Check · Проверить</button><button class="btn ghost hide" id="ordRetry">Try again · Ещё раз</button><button class="btn yellow hide" id="ordNext">Next round → · Дальше →</button><span id="ordFb" style="font-weight:800"></span></div>';
+  h+='<div class="quiz-foot"><button class="btn pink" id="ordCheck" style="color:#fff">Check</button><button class="btn ghost hide" id="ordRetry">Try again · Ещё раз</button><button class="btn yellow hide" id="ordNext">Next round → · Дальше →</button><span id="ordFb" style="font-weight:800"></span></div>';
   el.innerHTML=h;
   var picked=[];
   el.querySelectorAll('.ordcard').forEach(function(c){
@@ -1810,7 +1849,7 @@ function roundGap(id){
   for(var i=words.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=words[i]; words[i]=words[j]; words[j]=t; }
   h+='<div class="bank" id="gapBank">';
   words.forEach(function(w){ h+='<button class="btn yellow bw" data-w="'+esc(w)+'" style="font-size:14px;padding:4px 12px">'+esc(w)+'</button>'; });
-  h+='</div><div class="quiz-foot"><button class="btn pink" id="gapCheck" style="color:#fff">Check · Проверить</button><span id="gapFb" style="font-weight:800"></span></div>';
+  h+='</div><div class="quiz-foot"><button class="btn pink" id="gapCheck" style="color:#fff">Check</button><span id="gapFb" style="font-weight:800"></span></div>';
   el.innerHTML=h;
   el.querySelectorAll('.bw').forEach(function(b){
     b.onclick=function(){
@@ -1856,7 +1895,7 @@ function roundGrammar(id){
     it.o.forEach(function(opt,oi){ h+='<label class="opt"><input type="radio" name="gr'+qi+'" value="'+oi+'" style="margin-right:9px">'+esc(opt)+'</label>'; });
     h+='</div>';
   });
-  h+='<div class="quiz-foot"><button class="btn pink" id="grCheck" style="color:#fff">Check · Проверить</button><button class="btn yellow hide" id="grNext">Next round → · Дальше →</button><span id="grFb" style="font-weight:800"></span></div>';
+  h+='<div class="quiz-foot"><button class="btn pink" id="grCheck" style="color:#fff">Check</button><button class="btn yellow hide" id="grNext">Next round → · Дальше →</button><span id="grFb" style="font-weight:800"></span></div>';
   el.innerHTML=h;
   document.getElementById('grCheck').onclick=function(){
     var got=0;
@@ -2184,12 +2223,7 @@ sBtn.onclick=function(){ SAVE.muted=!SAVE.muted; save(); sLabel(); if(!SAVE.mute
 if(SAVE.name){ enterClub(SAVE.name); } else { document.getElementById('nameInput').focus(); }
 </script>
 
-<script>
-/* ================= AMERICAN HOLIDAYS · Listening A1 =================
-   Методический комплекс: Савинкова А.А., ИАР «Методика обучения аудированию...» (ЧелГУ, 2026)
-   Модель: pre-listening -> while-listening -> post-listening */
-if(!SAVE.hol) SAVE.hol={};
-
+<script>if(!SAVE.hol) SAVE.hol={};
 var HOLIDAYS={
 thanksgiving:{emoji:"🦃",name:"Thanksgiving",ru:"День Благодарения",color:"var(--orange)",
  vocab:[["harvest","урожай"],["feast","праздничный пир"],["settler","поселенец"],["grateful","благодарный"],["turkey","индейка"],["pumpkin pie","тыквенный пирог"],["parade","парад"],["charity","благотворительность"],["mashed potatoes","картофельное пюре"]],
@@ -2254,184 +2288,244 @@ easter:{emoji:"🐰",name:"Easter in America",ru:"Пасха в Америке",
  post:[["When is Easter?","Когда Пасха?"],["What does the Easter Bunny do?","Что делает кролик?"],["What do people eat on Easter?","Что едят на Пасху?"]],
  retell:["Tell your teacher about Easter traditions in the USA.","Расскажи о пасхальных традициях в США."]}
 };
-var HOL_ORDER=["thanksgiving","halloween","christmas","independence","easter"];
 
-function holState(id){ if(!SAVE.hol[id]) SAVE.hol[id]={pts:0,done:{},pred:"",retell:""}; return SAVE.hol[id]; }
-function holMax(h){ return h.mc.length + (h.tf?h.tf.length:0) + (h.gap?h.gap.words.length:0); }
+var HOL_ORDER=['thanksgiving','halloween','christmas','independence','easter'];
+var HOL_TASKS={
+thanksgiving:{facts:[["It is always on a Thursday — that’s why many Americans have a 4-day weekend.","Праздник всегда в четверг, поэтому у американцев часто выходные 4 дня."],["About 46 million turkeys are eaten every Thanksgiving!","Каждый год съедают около 46 миллионов индеек!"],["Macy’s parade in New York is almost 100 years old.","Парад Macy’s в Нью-Йорку почти 100 лет."],["Black Friday, the big shopping day, comes right after it.","Сразу после него идёт «Чёрная пятница» — день больших распродаж."]],
+ seq:[["English settlers come to America","Английские поселенцы приезжают в Америку"],["The first winter is very hard","Первая зима очень тяжёлая"],["Native Americans teach them to grow food","Индейцы учат их выращивать еду"],["Big harvest in autumn","Большой урожай осенью"],["A big feast for everyone","Большой пир для всех"],["Today: family dinner and parades","Сегодня: семейный ужин и парады"]],
+ finderr:[["People celebrate it on the fourth Thursday of November.",false],["The first Thanksgiving was in 1721.",true],["Native Americans helped the settlers.",false],["They taught the settlers to grow rice and tea.",true],["Today people have a big dinner with family.",false],["The traditional food is fish and chips.",true]],
+ sort:{a:"On the table 🦃",b:"Not on the table ❌",items:[["turkey",1],["pumpkin pie",1],["mashed potatoes",1],["corn",1],["sushi",0],["pizza",0],["dumplings",0],["ice cream",0]]},
+ game:{kind:'table',stages:['🍽️','🥗','🍗','🥧','🦃⭐'],qs:[["When is Thanksgiving?",["The fourth Thursday of November","The first Monday of October","The last day of December"],0],["When was the first Thanksgiving?",["1492","1621","1776"],1],["Who helped the settlers?",["The Native Americans","The French king","Pirates"],0],["What is the traditional main dish?",["Turkey","Fish","Pizza"],0],["What do people watch on TV?",["Parades and American football","Opera","Cartoons only"],0]]},
+ tasks:['words','seq','finderr','sort','quiz','game','speak']},
+halloween:{facts:[["Halloween comes from an old Celtic festival 2,000 years old.","Хэллоуин произошёл от кельтского праздника, которому 2000 лет."],["Americans spend about 10 billion dollars on candy for Halloween!","Американцы тратят на конфеты к Хэллоуину около 10 миллиардов долларов!"],["The most popular costume is a witch.","Самый популярный костюм — ведьма."],["Ireland and Scotland celebrate Halloween too.","Хэллоуин отмечают также в Ирландии и Шотландии."]],
+ seq:[["People dress up in costumes","Люди надевают костюмы"],["Children go from house to house","Дети ходят от дома к дому"],["They say «trick-or-treat!»","Они говорят «сладость или гадость!»"],["They get candy","Они получают конфеты"],["People carve jack-o'-lanterns","Люди вырезают светильники из тыкв"],["There are parties at night","Ночью устраивают вечеринки"]],
+ finderr:[["Halloween is on October 31.",false],["Children say «trick-or-treat!».",false],["People give children vegetables.",true],["Jack-o'-lantern is made from a watermelon.",true],["People wear scary costumes.",false],["Halloween is a morning holiday.",true]],
+ sort:{a:"Halloween 🎃",b:"Not Halloween ❌",items:[["pumpkin",1],["ghost",1],["witch",1],["candy",1],["Easter egg",0],["Christmas tree",0],["snowman",0],["heart",0]]},
+ game:{kind:'pumpkin',stages:['🌱','🍈','🎃','🕯️🎃','🎃⭐'],qs:[["When is Halloween?",["October 31","December 25","July 4"],0],["What do children say?",["Trick-or-treat!","Happy birthday!","Good morning!"],0],["What do people carve?",["Pumpkins","Watermelons","Potatoes"],0],["What do children get?",["Candy","Books","Toys"],0],["When do Halloween parties happen?",["At night","In the morning","At school"],0]]},
+ tasks:['words','finderr','sort','quiz','game','speak']},
+christmas:{facts:[["Christmas is the most popular holiday in the USA.","Рождество — самый популярный праздник в США."],["Americans send about 1.6 billion Christmas cards every year!","Американцы отправляют около 1,6 миллиарда рождественских открыток в год!"],["The Christmas tree tradition came from Germany.","Традиция ёлки пришла из Германии."],["In the USA, Christmas is also a big shopping season.","В США Рождество — ещё и большой сезон распродаж."]],
+ seq:[["People decorate a Christmas tree","Люди наряжают ёлку"],["They put presents under the tree","Они кладут подарки под ёлку"],["Children hang up their stockings","Дети вешают чулки"],["Families have a big dinner","Семьи устраивают большой ужин"],["Everyone sings Christmas songs","Все поют рождественские песни"]],
+ write:[["People decorate a Christmas",'tree','.'],["brings presents to children.",'Santa Claus',''],["Children hang up their",'stockings','.'],["Families have a big",'dinner','.'],["People sing Christmas",'songs','.']],
+ sort:{a:"Christmas 🎄",b:"Not Christmas ❌",items:[["Santa Claus",1],["Christmas tree",1],["presents",1],["stockings",1],["pumpkin",0],["swimsuit",0],["Easter egg",0],["fireworks",0]]},
+ game:{kind:'tree',stages:['🌲','🌲✨','🎀🌲','🎁🎄','🎄⭐'],qs:[["When is Christmas?",["December 25","October 31","April 1"],0],["Who brings presents?",["Santa Claus","The Easter Bunny","The witch"],0],["What do people decorate?",["A tree","A car","A table only"],0],["What do children hang up?",["Stockings","Hats","Coats"],0],["What do families do together?",["Have a big dinner","Go fishing","Sleep all day"],0]]},
+ tasks:['match','seq','write','quiz','game','speak']},
+independence:{facts:[["The USA has 50 states and 13 stripes on the flag — one stripe for each first colony.","В США 50 штатов, а на флаге 13 полос — по одной за первые колонии."],["About 150 million hot dogs are eaten on July 4!","4 июля съедают около 150 миллионов хот-догов!"],["Fireworks on July 4 are a tradition since 1777.","Салют 4 июля — традиция с 1777 года."],["The Declaration of Independence was signed in Philadelphia.","Декларацию независимости подписали в Филадельфии."]],
+ seq:[["America is a British colony","Америка — британская колония"],["People want to be free","Люди хотят свободы"],["July 4, 1776: the Declaration is signed","4 июля 1776 года подписана Декларация"],["Americans celebrate with flags and parades","Американцы празднуют с флагами и парадами"],["In the evening there are fireworks","Вечером запускают салют"]],
+ write:[["Independence Day is on July",'4','.'],["The Declaration was signed in",'1776','.'],["People watch in the evening.",'fireworks',''],["The flag has 13.",'stripes','.'],["America wanted freedom from.",'Britain','']],
+ sort:{a:"On the flag 🇺🇸",b:"Not on the flag ❌",items:[["stars",1],["stripes",1],["red color",1],["blue color",1],["turkey",0],["tree",0],["egg",0],["snowflake",0]]},
+ game:{kind:'flag',stages:['⬜','🟥⬜','🟥⬜🟥','🇺🇸','🇺🇸⭐'],qs:[["When is Independence Day?",["July 4","July 14","June 4"],0],["When was the Declaration signed?",["1776","1876","1676"],0],["Who did America become free from?",["Britain","Spain","France"],0],["What do people watch at night?",["Fireworks","Opera","TV news"],0],["How many stripes are on the flag?",["13","50","7"],0]]},
+ tasks:['seq','match','write','quiz','game','speak']},
+easter:{facts:[["Easter is always in spring, but the date changes every year.","Пасха всегда весной, но дата каждый год меняется."],["The White House has an Easter Egg Roll for children.","В Белом доме для детей устраивают «катание яиц»."],["Americans buy about 700 million marshmallow peeps!","Американцы покупают около 700 миллионов зефирных цыплят!"],["The Easter Bunny tradition came from Germany.","Традиция Пасхального кролика пришла из Германии."]],
+ seq:[["Easter is a spring holiday","Пасха — весенний праздник"],["People paint eggs","Люди разукрашивают яйца"],["Parents hide the eggs","Родители прячут яйца"],["Children look for the eggs","Дети ищут яйца"],["Everyone eats chocolate eggs","Все едят шоколадные яйца"]],
+ write:[["Easter is a holiday.",'spring',''],["People paint.",'eggs',''],["Parents the eggs.",'hide',''],["The Easter brings chocolate.",'Bunny',''],["Children for eggs.",'look','']],
+ sort:{a:"Easter 🐣",b:"Not Easter ❌",items:[["egg",1],["bunny",1],["basket",1],["flowers",1],["pumpkin",0],["snowman",0],["witch",0],["fireworks",0]]},
+ game:{kind:'eggs',stages:['🌿','🥚','🐰','🧺','🧺⭐'],qs:[["When is Easter?",["In spring","In winter","In autumn"],0],["What do people paint?",["Eggs","Cars","Books"],0],["Who hides the eggs?",["Parents","Teachers","Police"],0],["What animal brings chocolate?",["The Easter Bunny","A cat","A bear"],0],["What do children do?",["Look for eggs","Sleep","Watch TV"],0]]},
+ tasks:['words','match','write','sort','game','speak']}
+};
 
-/* ---------- hub ---------- */
+
+/* ================= ENGINE 2.0 ================= */
+var HOLP={id:null,tts:true,audio:null,rate:1,playing:false,
+ init:function(id){ this.id=id; this.playing=false;
+  fetch('audio/'+id+'.mp3',{method:'HEAD'}).then(function(r){ HOLP.tts=!r.ok; if(!HOLP.tts){ HOLP.audio=new Audio('audio/'+id+'.mp3'); HOLP.audio.playbackRate=HOLP.rate; HOLP.audio.onended=function(){HOLP.playing=false; HOLP.ui();}; } HOLP.ui(); }).catch(function(){ HOLP.tts=true; HOLP.ui(); });
+ },
+ speak:function(){ try{ var u=new SpeechSynthesisUtterance(HOLIDAYS[this.id].text); u.lang='en-US'; u.rate=this.rate;
+   var vs=speechSynthesis.getVoices().filter(function(v){return v.lang && v.lang.indexOf('en')===0 && /Samantha|Google UK English Female|Microsoft|Natural|Female/i.test(v.name)})[0] || speechSynthesis.getVoices().filter(function(v){return v.lang && v.lang.indexOf('en')===0})[0];
+   if(vs) u.voice=vs;
+   u.onend=function(){HOLP.playing=false; HOLP.ui();};
+   speechSynthesis.cancel(); speechSynthesis.speak(u); this.playing=true; }catch(e){} },
+ toggle:function(){ if(this.tts){ if(this.playing){ speechSynthesis.cancel(); this.playing=false; } else { this.speak(); } } else { if(!this.audio) return; if(this.audio.paused){ this.audio.playbackRate=this.rate; this.audio.play(); this.playing=true; } else { this.audio.pause(); this.playing=false; } } this.ui(); },
+ cycleRate:function(){ var r=[0.75,1,1.25,1.5]; var i=(r.indexOf(this.rate)+1)%r.length; this.rate=r[i]; if(this.audio) this.audio.playbackRate=this.rate; var b=document.getElementById('holRate'); if(b) b.textContent='×'+this.rate; sfx.pop(); },
+ ui:function(){ var b=document.getElementById('holPlay'); if(b) b.textContent=this.playing?'⏸':'▶'; }
+};
+function holProg(id){ var h=SAVE.hol[id]||{}; return h; }
+function holSave(id,obj){ SAVE.hol[id]=SAVE.hol[id]||{}; for(var k in obj) SAVE.hol[id][k]=obj[k]; save(); }
+
 function buildHolHub(){
-  var g=document.getElementById('holGrid'); if(!g) return; g.innerHTML='';
-  HOL_ORDER.forEach(function(id,i){
-    var h=HOLIDAYS[id], st=holState(id), max=holMax(h);
-    var card=document.createElement('div'); card.className='card holcard tilt'+((i%3)+1);
-    card.innerHTML='<div class="hem">'+h.emoji+'</div><h3>'+h.name+'</h3><div class="ru" data-ru="'+esc(h.ru)+'">'+h.ru+'</div>'
-      +'<div style="margin-top:10px"><button class="btn '+(i%2?'yellow':'green')+'">Open · Открыть</button></div>'
-      +'<div class="prog">'+(st.pts>=max?'🏆 '+max+'/'+max:'🍩 '+st.pts+' / '+max)+'</div>';
-    card.querySelector('button').onclick=function(){ openHol(id); };
-    g.appendChild(card);
-  });
+ var g=document.getElementById('holGrid'); if(!g) return; g.innerHTML='';
+ HOL_ORDER.forEach(function(id,i){
+  var h=HOLIDAYS[id], p=holProg(id), done=p.done?Object.keys(p.done).length:0, total=HOL_TASKS[id].tasks.length;
+  var st = p.game ? '✅ done · пройдено' : (done>0 ? '⏳ in progress · в процессе ('+done+'/'+total+')' : '🔒 new · новый');
+  var d=document.createElement('div');
+  d.className='card holcard tilt'+((i%3)+1);
+  d.innerHTML='<div class="hem">'+h.emoji+'</div><h3>'+h.name+'</h3><div class="ru">'+h.ru+'</div><div class="prog">'+st+'</div><div style="margin-top:10px"><button class="btn yellow">Open</button></div>';
+  d.querySelector('button').onclick=function(){ openHol(id); };
+  g.appendChild(d);
+ });
 }
 
-/* ---------- audio: file audio/<id>.mp3 if present, else browser TTS ---------- */
-function playHol(id, btn){
-  var old=btn.textContent; btn.textContent='⏳';
-  var useTTS=function(){
-    try{
-      var u=new SpeechSynthesisUtterance(HOLIDAYS[id].text);
-      u.lang='en-US'; u.rate=0.85;
-      var vs=speechSynthesis.getVoices();
-      var v=vs.filter(function(x){return /^en(-|_)US/i.test(x.lang)})[0]||vs.filter(function(x){return /^en/i.test(x.lang)})[0];
-      if(v) u.voice=v;
-      u.onend=function(){btn.textContent=old}; u.onerror=function(){btn.textContent=old};
-      speechSynthesis.cancel(); speechSynthesis.speak(u);
-      btn.textContent='🔊';
-    }catch(e){ btn.textContent=old; }
-  };
-  try{
-    fetch('audio/'+id+'.mp3',{method:'HEAD'}).then(function(r){
-      if(r.ok){ var a=new Audio('audio/'+id+'.mp3'); a.play(); btn.textContent='🔊';
-        a.onended=function(){btn.textContent=old}; a.onerror=useTTS; }
-      else useTTS();
-    }).catch(useTTS);
-  }catch(e){ useTTS(); }
-}
-
-/* ---------- module page ---------- */
 function openHol(id){
-  var h=HOLIDAYS[id], st=holState(id), max=holMax(h), root=document.getElementById('holRoot');
-  var i, html='';
-  html+='<div class="pgbtn"><button class="btn ghost" data-go="listening">← Listening</button><span></span></div>';
-  html+='<div class="bread"><a data-go="home">Home</a> › <a data-go="listening">Listening</a> › '+h.name+'</div>';
-  html+='<div class="stitle" style="background:'+h.color+';'+(h.color==='var(--purple)'||h.color==='var(--red)'||h.color==='var(--blue)'?'color:#fff;':'')+'">'+h.emoji+' '+h.name+'</div>';
-  html+='<div class="ep-ru" data-ru="'+esc(h.ru)+'">'+h.ru+' · listening · level A1</div>';
-  html+='<div class="tabs">'
-    +'<button class="ett on" data-tab="pre">1 · Before listening</button>'
-    +'<button class="ett" data-tab="while">2 · While listening</button>'
-    +'<button class="ett" data-tab="post">3 · After listening</button></div>';
-
-  /* ---- TAB 1: PRE ---- */
-  html+='<div class="etpane on" data-pane="pre">';
-  html+='<div class="hsec">🗣️ Discussion <span class="tag2">PRE-LISTENING</span></div>';
-  html+='<div class="grid" style="gap:10px">';
-  h.discuss.forEach(function(d){ html+='<div class="card teaser"><div class="qm">?</div><div data-ru="'+esc(d[1])+'">'+esc(d[0])+'</div></div>'; });
-  html+='</div>';
-  html+='<div class="hsec">🃏 New words <span class="tag2">нажми, чтобы перевернуть</span></div>';
-  html+='<div class="vocab">';
-  h.vocab.forEach(function(w){ html+='<div class="vc"><div class="vc-in"><div class="f"><span class="en">'+esc(w[0])+'</span><span class="tip" style="position:static;display:block;border:none;box-shadow:none;background:none;color:#888">tap to flip</span></div><div class="f back"><span class="ru">'+esc(w[1])+'</span></div></div></div>'; });
-  html+='</div>';
-  html+='<div class="hsec">🔮 Prediction</div><div class="small" style="margin-bottom:6px" data-ru="Посмотри на слова: что расскажет текст? Напиши 1–2 предложения.">Look at the words: what will the text be about? Write 1–2 sentences.</div>';
-  html+='<textarea id="holPred" placeholder="I think this text is about…">'+esc(st.pred||'')+'</textarea>';
-  html+='</div>';
-
-  /* ---- TAB 2: WHILE ---- */
-  html+='<div class="etpane" data-pane="while">';
-  html+='<div class="playerbar"><button class="pbtn" id="holPlay">▶️</button><div class="pmeta"><b>Listen to the text</b> · ~2 min · slow English<br><span data-ru="Прослушай текст 1–2 раза, затем выполни задания. Здесь задания с автопроверкой!">Listen 1–2 times, then do the tasks. Auto-checking here!</span></div>'
-    +'<span class="holscore">🍩 <span id="holPts">'+st.pts+'</span> / '+max+'</span></div>';
-  html+='<details class="trx"><summary>📄 Transcript · Транскрипт</summary><p>'+esc(h.text)+'</p></details>';
-
-  html+='<div class="hsec">✅ Task 1. Choose the correct answer</div>';
-  h.mc.forEach(function(m,qi){
-    html+='<div class="quiz-q" data-grp="mc'+qi+'"><div class="qq">'+esc(m.q)+'</div><div class="qr" data-ru="'+esc(m.ru)+'">'+esc(m.ru)+'</div>';
-    m.opts.forEach(function(o,oi){ html+='<div class="opt" data-q="mc'+qi+'" data-i="'+oi+'">'+esc(o)+'</div>'; });
-    html+='</div>';
-  });
-
-  if(h.tf){
-    html+='<div class="hsec">✅ Task 2. True or False?</div>';
-    h.tf.forEach(function(t,ti){ html+='<div class="tfrow" data-grp="tf'+ti+'"><div class="tst" data-ru="Верно или неверно?">'+esc(t[0])+'</div><button class="tfb" data-q="tf'+ti+'" data-v="1">True</button><button class="tfb" data-q="tf'+ti+'" data-v="0">False</button></div>'; });
-  }
-  if(h.gap){
-    html+='<div class="hsec">✅ Task 2. Fill in the gaps</div><div class="small" style="margin-bottom:4px" data-ru="Нажми на слово из банка, затем на пропуск. Проверь себя кнопкой.">Tap a word from the bank, then tap a gap. Press Check.</div>';
-    html+='<div class="bank">'; h.gap.words.forEach(function(w){ html+='<span class="chip" data-w="'+esc(w)+'">'+esc(w)+'</span>'; }); html+='</div>';
-    h.gap.sents.forEach(function(s,gi){ html+='<div class="gapsent">'+esc(s.split('___')[0])+'<span class="gapx" data-g="'+gi+'">&nbsp;</span>'+esc(s.split('___')[1]||'')+'</div>'; });
-    html+='<button class="btn blue" id="gapCheck" style="margin-top:8px">Check · Проверить</button>';
-  }
-  html+='</div>';
-
-  /* ---- TAB 3: POST ---- */
-  html+='<div class="etpane" data-pane="post">';
-  html+='<div class="hsec">💬 Answer the questions <span class="tag2">POST-LISTENING</span></div><div class="grid" style="gap:10px">';
-  h.post.forEach(function(p){ html+='<div class="card teaser"><div class="qm">💬</div><div data-ru="'+esc(p[1])+'">'+esc(p[0])+'</div></div>'; });
-  html+='</div>';
-  html+='<div class="hsec">📣 Retell the story</div><div class="small" style="margin-bottom:6px" data-ru="'+esc(h.retell[1])+'">'+esc(h.retell[0])+'</div>';
-  html+='<textarea id="holRetell" placeholder="Retell the text in 4–6 sentences…">'+esc(st.retell||'')+'</textarea>';
-  html+='<div class="small" style="margin-top:6px" data-ru="Ответ учителю на занятии — устно. Это поле черновик.">Tell your teacher at the lesson — aloud. This box is a draft.</div>';
-  html+='</div>';
-
-  root.innerHTML=html;
-  root.querySelectorAll('.bread a[data-go]').forEach(function(a){ a.onclick=function(){ go(a.dataset.go); }; });
-  root.querySelectorAll('[data-go]').forEach(function(a){ if(!a.onclick) a.addEventListener('click',function(){ go(a.dataset.go); }); });
-
-  /* tabs */
-  root.querySelectorAll('.ett').forEach(function(b){ b.onclick=function(){
-    root.querySelectorAll('.ett').forEach(function(x){x.classList.remove('on')}); b.classList.add('on');
-    root.querySelectorAll('.etpane').forEach(function(p){ p.classList.toggle('on', p.dataset.pane===b.dataset.tab); });
-    sfx.pop();
-  };});
-
-  /* vocab flip */
-  root.querySelectorAll('.vc').forEach(function(c){ c.onclick=function(){ c.classList.toggle('flipped'); sfx.flip(); }; });
-
-  /* prediction + retell autosave */
-  root.querySelector('#holPred').addEventListener('input',function(e){ st.pred=e.target.value; save(); });
-  root.querySelector('#holRetell').addEventListener('input',function(e){ st.retell=e.target.value; save(); });
-
-  /* player */
-  root.querySelector('#holPlay').onclick=function(){ playHol(id,this); };
-
-  /* scoring */
-  var addPt=function(grp){
-    if(st.done[grp]) return 0;
-    st.done[grp]=1; st.pts++; save();
-    var el=root.querySelector('#holPts'); if(el) el.textContent=st.pts;
-    if(st.pts>=max){ sfx.fanfare(); } else sfx.correct();
-    buildHolHub(); return 1;
-  };
-  root.querySelectorAll('.opt').forEach(function(o){ o.onclick=function(){
-    var grp=o.dataset.q, qi=+grp.slice(2);
-    if(st.done[grp]) return;
-    if(+o.dataset.i===h.mc[qi].a){ o.classList.add('ok'); addPt(grp); }
-    else { o.classList.add('bad'); sfx.wrong(); }
-  };});
-  root.querySelectorAll('.tfb').forEach(function(b){ b.onclick=function(){
-    var grp=b.dataset.q, ti=+grp.slice(2);
-    if(st.done[grp]) return;
-    var correct=((b.dataset.v==='1')===h.tf[ti][1]);
-    if(correct){ b.classList.add('ok'); addPt(grp); }
-    else { b.classList.add('bad'); sfx.wrong(); }
-  };});
-  var gapFill=root.querySelectorAll('.gapx'), chips=root.querySelectorAll('.chip');
-  chips.forEach(function(ch){ ch.onclick=function(){
-    for(var k=0;k<gapFill.length;k++){ if(!gapFill[k].dataset.w){ gapFill[k].dataset.w=ch.dataset.w; gapFill[k].textContent=ch.dataset.w; gapFill[k].classList.add('filled'); ch.classList.add('used'); sfx.pop(); return; } }
-  };});
-  gapFill.forEach(function(gp){ gp.onclick=function(){ if(gp.dataset.w){ var ch=[].find.call(chips,function(c){return c.dataset.w===gp.dataset.w&&!c.classList.contains('used')}); if(ch) ch.classList.remove('used'); delete gp.dataset.w; gp.innerHTML='&nbsp;'; gp.classList.remove('filled'); } }; });
-  var gc=root.querySelector('#gapCheck'); if(gc) gc.onclick=function(){
-    var all=true;
-    gapFill.forEach(function(gp,gi){
-      gp.classList.remove('right','wrong');
-      var grp='gap'+gi;
-      if(gp.dataset.w===h.gap.words[gi]){ gp.classList.add('right'); addPt(grp); }
-      else { gp.classList.add('wrong'); all=false; }
-    });
-    if(!all) sfx.wrong();
-  };
-
-  go('hol');
+ var h=HOLIDAYS[id], T=HOL_TASKS[id], R=document.getElementById('holRoot');
+ document.body.setAttribute('data-world','hol_'+id); renderDeco('hol_'+id);
+ document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});
+ document.getElementById('page-hol').classList.add('on');
+ window.scrollTo({top:0}); sfx.pop();
+ HOLP.init(id);
+ var chips=h.vocab.map(function(v){return '<button class="lword hw" data-ru="» '+esc(v[1])+'">'+esc(v[0])+'</button>'}).join('');
+ R.innerHTML =
+  '<div class="pgbtn"><button class="btn ghost" id="holBack">← Listening</button><span></span></div>'
+  +'<div style="text-align:center"><div class="bread" style="text-align:center"><a id="holBack2">Listening</a> › '+h.name+'</div>'
+  +'<div style="font-size:64px;line-height:1.1;margin:6px 0">'+h.emoji+'</div>'
+  +'<div class="stitle">'+h.name+'</div><div class="ep-ru" style="margin-top:6px">'+h.ru+'</div></div>'
+  +'<div class="playerbar"><button class="pbtn" id="holPlay" data-ru="Слушать">▶</button><button class="tfb" id="holRate" data-ru="Скорость">×1</button>'
+  +'<div class="pmeta" data-ru="Нажми Play. Можно поставить на паузу и менять скорость."><b>Listen to the text</b> · Press Play. You can pause and change the speed.<br><span class="small" style="color:#777">'+h.text.split(' ').length+' words · A1</span></div></div>'
+  +'<div class="card" style="margin-top:14px"><h3 style="margin:0 0 6px" data-ru="Слова">Words</h3><div class="small" style="margin-bottom:8px" data-ru="Нажми на слово — увидишь перевод.">Tap a word to see the translation.</div><div class="listengrid">'+chips+'</div></div>'
+  +'<div id="holFacts"></div><div id="holTasks" style="margin-top:16px;display:grid;gap:14px"></div><div id="holGame"></div><div id="holSpeak"></div>';
+ document.getElementById('holBack').onclick=function(){ go('listening'); };
+ document.getElementById('holBack2').onclick=function(){ go('listening'); };
+ document.getElementById('holPlay').onclick=function(){ HOLP.toggle(); };
+ document.getElementById('holRate').onclick=function(){ HOLP.cycleRate(); };
+ R.querySelectorAll('.hw').forEach(function(b){ b.onclick=function(){ b.classList.toggle('on'); sfx.pop(); }; });
+ // facts
+ var fw=document.getElementById('holFacts');
+ fw.innerHTML='<div class="card culture" style="margin-top:14px"><span class="clabel">COUNTRY SPOTLIGHT · СТРАНОВЕДЕНИЕ</span>'+T.facts.map(function(f){return '<div style="font-size:14.5px;margin-top:6px">🌍 '+f[0]+'<div class="ru" style="color:#6b6b6b;font-size:12.5px">'+f[1]+'</div></div>'}).join('')+'</div>';
+ renderHolTasks(id);
 }
 
-/* ---------- nav link ---------- */
-(function(){
-  var links=document.querySelector('nav .links');
-  if(links && !links.querySelector('a[data-go="listening"]')){
-    var a=document.createElement('a'); a.dataset.go='listening'; a.textContent='🎧 Listening'; a.setAttribute('data-ru','Аудирование: праздники США');
-    var tr=links.querySelector('a[data-go="trophies"]');
-    if(tr) links.insertBefore(a,tr); else links.appendChild(a);
-    a.addEventListener('click',function(){ go('listening'); });
-  }
-  buildHolHub();
-  var mo=new MutationObserver(function(){ if(window.__page==='listening') buildHolHub(); });
-})();
+function renderHolTasks(id){
+ var T=HOL_TASKS[id], box=document.getElementById('holTasks'), P=holProg(id), done=(P&&P.done)||{};
+ box.innerHTML='';
+ T.tasks.forEach(function(type,idx){
+  if(type==='game'){ renderHolGame(id); return; }
+  if(type==='speak'){ renderHolSpeak(id); return; }
+  var card=document.createElement('div'); card.className='card';
+  var badge='<span class="badge2" style="background:var(--ink);color:var(--yellow);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:800">TASK '+(idx+1)+' · '+type.toUpperCase()+'</span>';
+  card.innerHTML='<div style="margin-bottom:8px">'+badge+(done[type]?' <span style="color:var(--green);font-weight:800">✓ done</span>':'')+'</div><div class="tbody"></div>';
+  box.appendChild(card);
+  var body=card.querySelector('.tbody');
+  if(type==='words') holTaskWords(id,body,done[type]);
+  else if(type==='seq') holTaskSeq(id,body,done[type]);
+  else if(type==='finderr') holTaskErr(id,body,done[type]);
+  else if(type==='sort') holTaskSort(id,body,done[type]);
+  else if(type==='match') holTaskMatch(id,body,done[type]);
+  else if(type==='write') holTaskWrite(id,body,done[type]);
+  else if(type==='quiz') holTaskQuiz(id,body,done[type]);
+ });
+}
+
+function holMark(id,type,body){ holSave(id,{done:(function(){var d=holProg(id).done||{}; d[type]=true; return d;})()}); body.innerHTML='<div style="text-align:center;font-weight:800;color:var(--green);font-size:18px">✓ Great! · Отлично!</div>'; sfx.correct(); renderHolTasks(id); }
+
+function holTaskWords(id,body,isDone){
+ var h=HOLIDAYS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Охота за словами">Word hunt</h3><div class="small" style="margin-bottom:8px" data-ru="Слушай текст и отмечай слова, которые услышишь.">Listen and tick the words you hear.</div><div class="listengrid">'+h.vocab.map(function(v){return '<button class="lword">'+esc(v[0])+'</button>'}).join('')+'</div><div style="margin-top:10px"><button class="btn yellow hol-done">Done</button></div>';
+ body.querySelector('.hol-done').onclick=function(){ holMark(id,'words',body); };
+}
+function holTaskSeq(id,body,isDone){
+ var T=HOL_TASKS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ var idx=T.seq.map(function(_,i){return i});
+ for(var i=idx.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=idx[i];idx[i]=idx[j];idx[j]=t;}
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Расставь события">Put in order</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на фразы в правильном порядке.">Click the phrases in the right order.</div><div class="hol-seq"></div><div class="quiz-foot"><button class="btn pink hol-check" style="color:#fff">Check</button><span class="hol-fb" style="font-weight:800"></span></div>';
+ var seq=body.querySelector('.hol-seq'), picked=[];
+ idx.forEach(function(n){ var d=document.createElement('div'); d.className='card ordcard'; d.style.marginBottom='8px'; d.style.padding='8px 14px'; d.dataset.n=n;
+  d.innerHTML='<span class="ordnum"></span><div>'+T.seq[n][0]+'<div class="ru" style="font-size:12px;color:#777">'+T.seq[n][1]+'</div></div>';
+  d.onclick=function(){ var p=picked.indexOf(n); if(p>=0)picked.splice(p,1); else picked.push(n);
+   seq.querySelectorAll('.ordcard').forEach(function(x){ var k=+x.dataset.n, pp=picked.indexOf(k); x.classList.toggle('picked',pp>=0); x.querySelector('.ordnum').textContent=pp>=0?(pp+1):''; }); sfx.pop(); };
+  seq.appendChild(d); });
+ body.querySelector('.hol-check').onclick=function(){
+  var ok=picked.length===T.seq.length; for(var k=0;k<picked.length;k++){ if(picked[k]!==k) ok=false; }
+  seq.querySelectorAll('.ordcard').forEach(function(x){ x.style.pointerEvents='none'; var p=picked.indexOf(+x.dataset.n); if(p===+x.dataset.n)x.classList.add('right'); else if(p>=0)x.classList.add('wrong'); });
+  if(ok){ sfx.fanfare(); holMark(id,'seq',body); } else { sfx.wrong(); body.querySelector('.hol-fb').textContent='Look at the green order and try again · Посмотри правильный порядок'; }
+ };
+}
+function holTaskErr(id,body,isDone){
+ var T=HOL_TASKS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Найди ошибки">Spot the mistakes</h3><div class="small" style="margin-bottom:8px" data-ru="В 4 предложениях — ошибки. Слушай текст и жми на предложения с ошибками.">4 sentences have mistakes. Listen and tap them!</div><div class="hol-err"></div><div class="quiz-foot"><span class="hol-fb" style="font-weight:800"></span></div>';
+ var box=body.querySelector('.hol-err'), found=0, need=T.finderr.filter(function(f){return f[1]}).length;
+ T.finderr.forEach(function(f,i){ var d=document.createElement('div'); d.className='card'; d.style.marginBottom='8px'; d.style.cursor='pointer'; d.style.padding='10px 14px';
+  d.innerHTML=(i+1)+'. '+f[0];
+  d.onclick=function(){ if(d.dataset.lock)return;
+   if(f[1]){ d.dataset.lock=1; d.style.background='var(--red)'; d.style.color='#fff'; found++; sfx.correct(); }
+   else { d.dataset.lock=1; d.style.background='var(--green)'; sfx.pop(); }
+   if(found>=need){ sfx.fanfare(); holMark(id,'finderr',body); } };
+  box.appendChild(d); });
+}
+function holTaskSort(id,body,isDone){
+ var T=HOL_TASKS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ var items=T.sort.items.map(function(_,i){return i}); for(var i=items.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=items[i];items[i]=items[j];items[j]=t;}
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Распредели">Sort it</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на слова: они по очереди переходят то в одну, то в другую колонку.">Tap the words to move them between the two columns.</div><div class="bank hol-bank"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px"><div class="card hol-a" style="min-height:70px;background:var(--paper)"><b>'+T.sort.a+'</b></div><div class="card hol-b" style="min-height:70px;background:var(--paper)"><b>'+T.sort.b+'</b></div></div><div class="quiz-foot" style="margin-top:10px"><button class="btn pink hol-check" style="color:#fff">Check</button><span class="hol-fb" style="font-weight:800"></span></div>';
+ var bank=body.querySelector('.hol-bank'), placed={};
+ items.forEach(function(n){ var w=T.sort.items[n][0]; var b=document.createElement('button'); b.className='btn yellow bw'; b.style.fontSize='14px'; b.style.padding='4px 12px'; b.textContent=w; b.dataset.n=n; b.dataset.side='0';
+  b.onclick=function(){ var s=(+b.dataset.side+1)%3; b.dataset.side=s;
+   if(s===0){ bank.appendChild(b); } else if(s===1){ body.querySelector('.hol-a').appendChild(b); } else { body.querySelector('.hol-b').appendChild(b); } placed[n]=s===0?null:(s===1?1:0); sfx.pop(); };
+  bank.appendChild(b); });
+ body.querySelector('.hol-check').onclick=function(){
+  var ok=true; T.sort.items.forEach(function(it,n){ if((placed[n]===undefined||placed[n]===null) && true){ ok=false; } if(placed[n]!==undefined && placed[n]!==null && placed[n]!==it[1]) ok=false; });
+  if(ok){ sfx.fanfare(); holMark(id,'sort',body); } else { sfx.wrong(); body.querySelector('.hol-fb').textContent='Not quite · Почти! Проверь колонки.'; }
+ };
+}
+function holTaskMatch(id,body,isDone){
+ var h=HOLIDAYS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ var pairs=h.vocab.slice(0,6), deck=[];
+ pairs.forEach(function(v){ deck.push({t:v[0],k:1}); deck.push({t:v[1],k:0}); });
+ for(var i=deck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=deck[i];deck[i]=deck[j];deck[j]=t;}
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Найди пары">Memory match</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на карточки и находи пары «слово — перевод».">Flip the cards and find word–translation pairs.</div><div class="hol-match" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>';
+ var grid=body.querySelector('.hol-match'), open=null, matched=0;
+ deck.forEach(function(c){ var d=document.createElement('div'); d.className='card'; d.style.textAlign='center'; d.style.cursor='pointer'; d.style.padding='10px 4px'; d.style.fontWeight='800'; d.style.fontSize='13.5px'; d.style.minHeight='52px'; d.style.display='flex'; d.style.alignItems='center'; d.style.justifyContent='center'; d.dataset.t=c.t; d.dataset.lock='';
+  d.textContent='❓';
+  d.onclick=function(){ if(d.dataset.lock||d===open)return; d.textContent=d.dataset.t; sfx.pop();
+   if(!open){ open=d; return; }
+   if(open.dataset.t===d.dataset.t && open!==d){ open.dataset.lock=1; d.dataset.lock=1; open.style.background='var(--green)'; d.style.background='var(--green)'; open=null; matched++; if(matched>=deck.length/2){ sfx.fanfare(); holMark(id,'match',body); } }
+   else { var a=open,b=d; open=null; setTimeout(function(){ if(!a.dataset.lock)a.textContent='❓'; if(!b.dataset.lock)b.textContent='❓'; },700); } };
+  grid.appendChild(d); });
+}
+function holTaskWrite(id,body,isDone){
+ var T=HOL_TASKS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Вставь слова">Write from memory</h3><div class="small" style="margin-bottom:8px" data-ru="Послушай текст ещё раз и вставь слова из рамки.">Listen again and fill the gaps with the words below.</div><div class="hol-write"></div><div class="bank hol-bank"></div><div class="quiz-foot" style="margin-top:10px"><button class="btn pink hol-check" style="color:#fff">Check</button><span class="hol-fb" style="font-weight:800"></span></div>';
+ var w=body.querySelector('.hol-write');
+ T.write.forEach(function(it,i){ w.innerHTML+='<div class="gapsent">'+(i+1)+'. '+it[0]+' <button class="gapword" data-i="'+i+'">?</button> '+it[2]+'</div>'; });
+ var words=T.write.map(function(it){return it[1]}); for(var i=words.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=words[i];words[i]=words[j];words[j]=t;}
+ var bank=body.querySelector('.hol-bank');
+ words.forEach(function(x){ var b=document.createElement('button'); b.className='btn yellow bw'; b.style.fontSize='14px'; b.style.padding='4px 12px'; b.textContent=x;
+  b.onclick=function(){ var empty=null; w.querySelectorAll('.gapword').forEach(function(g){ if(!g.classList.contains('filled')&&!empty) empty=g; });
+   if(!empty)return; empty.textContent=x; empty.classList.add('filled'); empty.dataset.w=x; b.classList.add('used'); sfx.pop(); };
+  bank.appendChild(b); });
+ w.querySelectorAll('.gapword').forEach(function(g){ g.onclick=function(){ if(!g.classList.contains('filled'))return; var x=g.dataset.w; g.textContent='?'; g.classList.remove('filled'); delete g.dataset.w; body.querySelectorAll('.bw').forEach(function(b){ if(b.textContent===x)b.classList.remove('used'); }); }; });
+ body.querySelector('.hol-check').onclick=function(){
+  var got=0; w.querySelectorAll('.gapword').forEach(function(g){ var i=+g.dataset.i; g.style.pointerEvents='none'; if(g.dataset.w && g.dataset.w.toLowerCase()===T.write[i][1].toLowerCase()){ g.classList.add('right'); got++; } else { g.classList.add('wrong'); g.textContent=T.write[i][1]; } });
+  body.querySelectorAll('.bw').forEach(function(b){ b.style.pointerEvents='none'; });
+  if(got===T.write.length){ sfx.fanfare(); holMark(id,'write',body); } else { sfx.wrong(); body.querySelector('.hol-fb').textContent=got+'/'+T.write.length+' · Попробуй ещё раз позже'; }
+ };
+}
+function holTaskQuiz(id,body,isDone){
+ var h=HOLIDAYS[id];
+ if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Мини-квиз">Quick quiz</h3><div class="hol-quiz"></div><div class="quiz-foot"><button class="btn pink hol-check" style="color:#fff">Check</button><span class="hol-fb" style="font-weight:800"></span></div>';
+ var qz=body.querySelector('.hol-quiz');
+ h.mc.forEach(function(q,qi){ var d=document.createElement('div'); d.className='quiz-q'; d.innerHTML='<div class="qq">'+(qi+1)+'. '+q.q+'</div><div class="qr">'+q.ru+'</div>';
+  q.opts.forEach(function(o,oi){ d.innerHTML+='<label class="opt"><input type="radio" name="hq'+qi+'" value="'+oi+'" style="margin-right:9px">'+esc(o)+'</label>'; });
+  qz.appendChild(d); });
+ body.querySelector('.hol-check').onclick=function(){
+  var got=0; h.mc.forEach(function(q,qi){ qz.querySelectorAll('.quiz-q')[qi].querySelectorAll('.opt').forEach(function(l,oi){ l.style.pointerEvents='none'; var inp=l.querySelector('input'); if(oi===q.a){ l.classList.add('ok'); if(inp.checked)got++; } else if(inp.checked){ l.classList.add('bad'); } }); });
+  sfx.pop(); body.querySelector('.hol-fb').textContent=got+'/'+h.mc.length;
+  if(got===h.mc.length){ sfx.fanfare(); holMark(id,'quiz',body); }
+ };
+}
+function renderHolGame(id){
+ var T=HOL_TASKS[id], g=T.game, box=document.getElementById('holGame'), P=holProg(id), stage=P.game?5:0;
+ box.innerHTML='<div class="card" style="margin-top:14px;text-align:center;background:linear-gradient(120deg,#fff,#fff6da)"><span class="badge2" data-ru="Финальная игра">FINAL GAME</span><h3 style="margin:8px 0 2px">'+({pumpkin:'Grow your pumpkin',tree:'Decorate the tree',table:'Set the table',flag:'Build the flag',eggs:'Fill the basket'}[g.kind])+'</h3><div class="small" data-ru="Правильные ответы достраивают картинку!">Correct answers build the picture!</div><div class="hol-stage" style="font-size:76px;margin:12px 0;line-height:1.2">'+g.stages[stage]+'</div><div class="hol-q"></div></div>';
+ var qbox=box.querySelector('.hol-q');
+ if(stage>=5){ qbox.innerHTML='<div style="font-weight:800;color:var(--green);font-size:18px" data-ru="Готово!">🏆 Complete!</div>'; return; }
+ function ask(){
+  var q=g.qs[stage];
+  qbox.innerHTML='<div class="quiz-q" style="text-align:left"><div class="qq">'+q[0]+'</div>'+q[1].map(function(o,oi){return '<label class="opt" style="cursor:pointer"><input type="radio" name="gq" value="'+oi+'" style="margin-right:9px">'+esc(o)+'</label>'}).join('')+'</div>';
+  qbox.querySelectorAll('.opt').forEach(function(l){ l.onclick=function(){ var oi=[].indexOf.call(qbox.querySelectorAll('.opt'),l);
+   if(oi===q[2]){ l.classList.add('ok'); sfx.correct(); stage++; holSave(id,{game:stage>=5}); setTimeout(function(){ openHol(id); },900); }
+   else { l.classList.add('bad'); l.style.pointerEvents='none'; sfx.wrong(); } }; });
+ }
+ ask();
+}
+function renderHolSpeak(id){
+ var h=HOLIDAYS[id], box=document.getElementById('holSpeak');
+ var qs=(h.discuss||[]).concat(h.post||[]).slice(0,5);
+ box.innerHTML='<div class="card speakgrid" style="margin-top:14px"><h3 style="margin:0 0 8px;grid-column:1/-1" data-ru="Говорим">Speaking</h3>'+qs.map(function(q,i){return '<div class="card speakcard"><div class="who">QUESTION '+(i+1)+'</div><div style="font-size:14.5px;margin-top:4px">'+q[0]+'</div><div class="ru" style="color:#666;font-size:13px;margin-top:6px">'+q[1]+'</div></div>'}).join('')+'</div>';
+}
+buildHolHub();
 </script>
 
 </body>
