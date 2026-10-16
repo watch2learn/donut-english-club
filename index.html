@@ -337,6 +337,32 @@ body[data-world="hol_independence"] .bread{color:#9aa5d8}
 </head>
 <body>
 
+<div id="login">
+  <div class="login-card popin">
+    <div class="sprk bob" id="loginSprk"></div>
+    <h1>Donut English Club</h1>
+    <div class="bubble tail-l" style="text-align:left;margin-top:14px">
+      <span data-ru="Привет! Я Пончик! Как тебя зовут?">Hi! I'm <b>Sprinkles</b>! What's your name?</span>
+    </div>
+    <div class="namewrap"><input id="nameInput" maxlength="20" placeholder="Your name" autocomplete="off"></div>
+    <div class="namewrap" style="margin-top:10px"><input id="codeInput" maxlength="20" placeholder="Club code · Код клуба" autocomplete="off" style="font-size:16px"></div>
+    <div class="small" style="margin-top:4px" data-ru="Спроси код у Арины">Ask Arina for the code · Спроси код у Арины</div>
+    <div id="codeState" style="font-weight:800;color:var(--red);margin-top:6px;min-height:22px"></div>
+    <button class="btn yellow" id="startBtn" style="font-size:20px" data-ru="Поехали!">Let's go!</button>
+  </div>
+</div>
+
+<nav id="mainNav" class="hide">
+  <a class="brand" data-go="home"><span id="navSprk"></span> Donut English Club</a>
+  <div class="links">
+    <a data-go="home" data-ru="Главная">Home</a>
+    <a data-go="movies" data-ru="Фильмы">Movies</a>
+    <a data-go="series" data-ru="Сериалы">Series</a>
+    <a data-go="listening" data-ru="Аудирование">Listening 🎧</a>
+    <button id="soundBtn">Sound: ON</button>
+  </div>
+</nav>
+
 <main class="wrap">
 
   <div class="page on" id="page-home">
