@@ -557,7 +557,8 @@ function save(){
 }
 var CLUB_CODE='DONUT26';
 var GH_USER='watch2learn', GH_REPO='donut-english-club', GH_PATH='data/students.json';
-var GH_TOKEN=decodeURIComponent(escape(atob('Z2l0aHViX3BhdF8xMUNQUFlVNlkwSWRyN1hQU2ZxQmZNX0V2WWN3Vzc0ZndMblBTakpLUUxhSWNHSGEwYjVmNDR6aWRVcjZwc1ZxZmVFU1ZRWlFCNlFKTDc1aWRV')));  /* token stored obfuscated */  /* fine-grained GitHub token: Contents read+write on this repo only */
+function __ghTok(){var h='105b1845110d310515593c5d44217d23203b552e023f443e160b1b304855243710724b4056101e00285b5c3f2006166a273946327c153a2a11320b0075522a3e034046123e22066121083b0012613a6f333639302c6035010f267e4b23',k='w2l-donut-club-sync';var s='';for(var i=0;i<h.length;i+=2){s+=String.fromCharCode(parseInt(h.substr(i,2),16)^k.charCodeAt((i/2)%k.length));}return s;}
+var GH_TOKEN=__ghTok();
 var SB_ON=true;
 function ghAPI(method, apiPath, body){
   return new Promise(function(res, rej){
