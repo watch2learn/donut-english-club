@@ -596,9 +596,9 @@ function cloudStatus(msg, isErr){
   var el=document.getElementById('cloudStatus'); if(!el) return;
   el.textContent='☁️ '+msg; el.style.color=isErr?'var(--red)':'#5a8a3c';
 }
-function cloudPush(){
+function cloudPush(retry){
   if(!SB_ON || !SAVE.name) return;
-  if(!GH_TOKEN || GH_TOKEN.indexOf('PASTE')===0){ cloudStatus('Cloud: offline · saves on this device · сохраняется на устройстве', false); return; }
+  if(!GH_TOKEN || GH_TOKEN.indexOf('github_pat_')!==0){ cloudStatus('Cloud: offline · saves on this device · сохраняется на устройстве', false); return; }
   cloudStatus('Cloud: saving…', false);
   ghReadFile().then(function(f){
     f.data.students=f.data.students||{};
@@ -606,7 +606,11 @@ function cloudPush(){
     if(remote && remote.u && remote.u>(SAVE.u||0)){ SAVE=remote; if(!SAVE.name) SAVE.name=remote.name; }
     f.data.students[SAVE.name]=SAVE;
     return ghWriteFile(f.sha, f.data).then(function(){ cloudStatus('Cloud: synced ✓', false); SAVE.cloudErr=null; });
-  }).catch(function(e){ SAVE.cloudErr=String((e&&e.message)||e); cloudStatus('Cloud ERROR: '+SAVE.cloudErr, true); });
+  }).catch(function(e){
+    var msg=String((e&&e.message)||e);
+    if(/409/.test(msg) && !retry){ setTimeout(function(){ cloudPush(true); }, 1200); return; }
+    SAVE.cloudErr=msg; cloudStatus('Cloud ERROR: '+SAVE.cloudErr, true);
+  });
 }
 function cloudPull(name){
   if(!SB_ON) return Promise.resolve(false);
