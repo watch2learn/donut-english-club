@@ -379,6 +379,29 @@ body[data-world="hol_independence"] .bread{color:#9aa5d8}
 @keyframes cffall{to{transform:translateY(70vh) rotate(540deg);opacity:0}}
 .dfly{position:fixed;z-index:9999;font-size:26px;pointer-events:none;transition:all .8s ease-in}
 
+
+/* ============ ARENDELLE (FROZEN WORLD) ============ */
+.aurora{position:absolute;top:0;left:0;width:100%;height:34vh;pointer-events:none;opacity:.85;
+  background:linear-gradient(100deg,transparent 20%,rgba(120,255,200,.25) 38%,rgba(120,200,255,.3) 52%,rgba(190,140,255,.28) 66%,transparent 84%);
+  filter:blur(14px);animation:aur 9s ease-in-out infinite alternate}
+@keyframes aur{from{transform:translateX(-6%) skewX(-8deg)}to{transform:translateX(6%) skewX(8deg)}}
+.castle{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,90vw);opacity:.9}
+body[data-world="frozen"]{background:linear-gradient(180deg,#0b1e3a 0%,#123a63 34%,#1d5a8a 62%,#7fb6d9 88%,#cfe9f5 100%);color:#eef}
+body[data-world="frozen"] .card,body[data-world="frozen"] .quiz-q{background:#f0f7ff;color:#1a2b45}
+body[data-world="frozen"] .stitle{background:#9fd8f0;color:#0b1e3a;box-shadow:6px 6px 0 #071527;transform:rotate(1deg)}
+body[data-world="frozen"] nav{background:#0d2242;border-bottom-color:#071527}
+body[data-world="frozen"] nav .links a,body[data-world="frozen"] nav .brand,body[data-world="frozen"] nav .brand span{color:#dff2ff}
+body[data-world="frozen"] footer{background:#0d2242;color:#dff2ff}
+body[data-world="frozen"] .small,body[data-world="frozen"] .sub,body[data-world="frozen"] .ep-ru,body[data-world="frozen"] .pmeta{color:#a9c6e8}
+body[data-world="frozen"] .vc .f,body[data-world="frozen"] .opt,body[data-world="frozen"] .gapword,body[data-world="frozen"] .lword,body[data-world="frozen"] .bank,body[data-world="frozen"] .patternbox,body[data-world="frozen"] .playerbar,body[data-world="frozen"] .pbtn,body[data-world="frozen"] .tfb,body[data-world="frozen"] .speakcard,body[data-world="frozen"] .ordnum{color:#1a2b45}
+body[data-world="frozen"] .bread{color:#9db8d8}
+body[data-world="frozen"] .bread a{color:#8fd0f0}
+body[data-world="frozen"] .teaser,body[data-world="frozen"] .speakcard{background:#e6f3ff}
+body[data-world="frozen"] .warmq .ru{color:#4a5f7e}
+.songcard{cursor:pointer;transition:transform .15s ease}
+.songcard:hover{transform:translateY(-4px) rotate(-.5deg)}
+.ytbtn{display:inline-block;font:inherit;font-weight:800;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);padding:8px 18px;cursor:pointer;box-shadow:4px 4px 0 rgba(43,43,43,.85);text-decoration:none}
+
 </style>
 </head>
 <body>
@@ -458,12 +481,11 @@ body[data-world="hol_independence"] .bread{color:#9aa5d8}
   <div class="page" id="page-movies">
     <div class="pgbtn"><span></span><button class="btn ghost" data-go="home" data-ru="На главную">← Home</button></div>
     <div class="stitle pink" data-ru="Фильмы">Movies</div>
-    <div class="card tilt1" style="text-align:center;padding:44px 20px;margin-top:20px">
-      <div class="sprk bob" id="moviesSprk" style="width:120px"></div>
-      <h2 style="margin-top:14px" data-ru="Фильмы — скоро!">Movies are coming soon!</h2>
-      <p style="color:#666;max-width:420px;margin:8px auto" data-ru="Мы готовим всё для тебя. А пока — заходи в Сериалы!">
-        We are getting everything ready for you. Meanwhile — check out the Series!</p>
-      <button class="btn yellow" data-go="series" data-ru="К сериалам">Go to Series</button>
+    <div class="card tilt1" style="text-align:center;padding:30px 20px;margin-top:20px;background:linear-gradient(160deg,#123a63,#1d5a8a);border-color:#0b1e3a">
+      <div style="font-size:60px;line-height:1.1">🏰</div>
+      <h2 style="margin-top:8px;color:#eaf" >Disney</h2>
+      <div style="color:#bcd8f0;font-size:14px" data-ru="Заходи в мир любимых мультфильмов">Step into the world of your favorite cartoons</div>
+      <div style="margin-top:12px"><button class="btn blue" data-go="disney" data-ru="Открыть">Open</button></div>
     </div>
   </div>
 
@@ -544,6 +566,53 @@ body[data-world="hol_independence"] .bread{color:#9aa5d8}
     <h2 style="margin:30px 0 12px" data-ru="Эпизоды">Episodes · Season 1</h2>
     <div id="gfEpList" style="display:grid;gap:14px"></div>
   </div>
+
+  <!-- ============ DISNEY HUB ============ -->
+  <div class="page" id="page-disney">
+    <div class="pgbtn"><button class="btn ghost" data-go="movies" data-ru="Назад">← Movies</button><span></span></div>
+    <div class="bread"><a data-go="movies">Movies</a> › Disney</div>
+    <div class="stitle pink" data-ru="Дисней">Disney</div>
+    <div class="seriesgrid" style="margin-top:22px">
+      <div class="card sercard tilt1" style="background:linear-gradient(160deg,#123a63,#2a6fa3);border-color:#0b1e3a">
+        <div style="font-size:64px;line-height:1.1">❄️</div>
+        <h3 style="color:#eaf">Frozen</h3>
+        <div class="ru" style="color:#bcd8f0" data-ru="Добро пожаловать в Эренделл">Welcome to Arendelle · 8 chapters + all songs</div>
+        <div style="margin-top:12px"><button class="btn blue" data-go="frozen" data-ru="Открыть">Enter Arendelle</button></div>
+      </div>
+      <div class="card sercard off tilt2">
+        <div style="font-size:64px;line-height:1.1">?</div>
+        <h3 style="color:#888">Coming soon</h3>
+        <div class="ru">Another Disney movie is on the way</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FROZEN / ARENDELLE ============ -->
+  <div class="page" id="page-frozen">
+    <div class="pgbtn"><button class="btn ghost" data-go="disney" data-ru="Назад">← Disney</button><span></span></div>
+    <div class="bread"><a data-go="movies">Movies</a> › <a data-go="disney">Disney</a> › Frozen</div>
+    <div style="text-align:center">
+      <div style="font-size:64px;line-height:1.1;margin-top:4px">❄️</div>
+      <div class="stitle">Frozen</div>
+      <div class="ep-ru" style="margin-top:6px" data-ru="Добро пожаловать в Эренделл">Welcome to Arendelle</div>
+    </div>
+    <div class="card" style="margin-top:16px;background:#eef7ff">
+      <div class="fact"><div class="dot" style="background:#9fd8f0"></div><div data-ru="Мультфильм Disney 2013 года, вдохновлённый «Снежной королевой» Андерсена.">A Disney movie from <b>2013</b>, inspired by Hans Christian Andersen's «The Snow Queen».</div></div>
+      <div class="fact"><div class="dot" style="background:#b197fc;transform:rotate(5deg)"></div><div data-ru="«Let It Go» получила «Оскар» и стала всемирным хитом.">«Let It Go» won an <b>Oscar</b> and became a world hit.</div></div>
+      <div class="fact"><div class="dot" style="background:#7ec8e3;transform:rotate(-4deg)"></div><div data-ru="Сёстры Эльза и Анна — одни из самых любимых героинь Disney.">Sisters <b>Elsa and Anna</b> are among Disney's most loved characters.</div></div>
+      <div class="fact"><div class="dot" style="background:#ff8c42;transform:rotate(7deg)"></div><div data-ru="Мультфильм делится на 8 глав — и каждая глава заканчивается песней!">The movie splits into <b>8 chapters</b> — and every chapter ends with a song!</div></div>
+    </div>
+    <h2 style="margin:26px 0 10px" data-ru="Герои">Meet the characters</h2>
+    <div class="fam-grid" id="fzFam"></div>
+    <h2 style="margin:26px 0 10px" data-ru="Песни">The Songs of Frozen</h2>
+    <div class="small" style="margin-bottom:10px" data-ru="Нажми на песню: слова, задания и клип.">Tap a song: vocabulary, tasks and the video.</div>
+    <div id="fzSongs" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px"></div>
+    <h2 style="margin:26px 0 10px" data-ru="Главы">Movie chapters · Season of lessons</h2>
+    <div id="fzChapters" style="display:grid;gap:12px"></div>
+  </div>
+
+  <!-- ============ FROZEN SONG PAGE ============ -->
+  <div class="page" id="page-fsong"><div id="fsongRoot"></div></div>
 
   <!-- ============ LISTENING: AMERICAN HOLIDAYS ============ -->
   <div class="page" id="page-listening">
@@ -770,6 +839,7 @@ function go(p){
   var world='donut';
   if(p==='simpsons') world='simpsons';
   else if(p==='gf') world='gf';
+  else if(p==='frozen'||p==='fsong') world='frozen';
   else if(EPISODES[p] && EPISODES[p].show) world=EPISODES[p].show;
   document.body.setAttribute('data-world', world);
   renderDeco(world);
@@ -795,6 +865,10 @@ function renderDeco(world){
     h+='<div class="moon"></div>';
     h+='<div class="pines dsk">'+PINES_SVG+'</div>';
     for(ff=0;ff<12;ff++){ h+='<div class="firefly" style="left:'+(5+Math.random()*90)+'vw;top:'+(35+Math.random()*45)+'vh;animation-duration:'+(4+Math.random()*5)+'s;animation-delay:-'+(Math.random()*5)+'s"></div>'; }
+  } else if(world==='frozen'){
+    h+='<div class="aurora"></div>';
+    for(var fs=0;fs<14;fs++){ h+='<div class="efall" style="left:'+(Math.random()*100)+'vw;font-size:'+(14+Math.random()*14)+'px;animation-duration:'+(10+Math.random()*12)+'s;animation-delay:-'+(Math.random()*12)+'s">❄</div>'; }
+    h+='<div class="castle dsk"><svg viewBox="0 0 400 150" width="100%"><path d="M200 10 L215 45 L245 50 L225 70 L235 105 L200 85 L165 105 L175 70 L155 50 L185 45 Z" fill="#bfe6ff" opacity=".85"/><rect x="120" y="80" width="40" height="70" fill="#a8d8f5" opacity=".8"/><rect x="240" y="80" width="40" height="70" fill="#a8d8f5" opacity=".8"/><rect x="100" y="120" width="200" height="30" fill="#9fd0f0" opacity=".8"/></svg></div>';
   } else if(world.indexOf('hol_')===0){
     var hd=world.slice(4);
     var map={thanksgiving:['🍂','🍁','🌽','🍂'],halloween:['🦇','🕷️','🎃','🦇','👻'],christmas:['❄️','❄️','❄️','⛄'],independence:['✨','🎆','⭐','✨'],easter:['🌸','🌷','🐣','🌸']};
@@ -968,6 +1042,7 @@ function buildEpisodePage(id){
       b.classList.add('on');
       root.querySelectorAll('.etpane').forEach(function(p){p.classList.remove('on')});
       document.getElementById('et-'+b.dataset.et.replace(':','-')).classList.add('on');
+      try{ b.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
       refreshLock(id);
     };
   });
@@ -1055,6 +1130,7 @@ function renderGameIntro(id){
 }
 function nextRound(G){
   G.round++;
+  try{ var _ge=document.getElementById('game-'+G.epid); if(_ge) _ge.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
   if(G.round===1) rWarmup(G);
   else if(G.round===2) rWho(G);
   else if(G.round===3) rTimeline(G);
@@ -1339,6 +1415,7 @@ function buildAll(){
     buildEpisodePage(id);
   });
   setImg('gfLogoImg','gflogo'); setImg('gfSeriesLogo','gflogo');
+  renderFzHub();
   renderTrophies(); renderContinue(); renderFact();
 }
 var GF_FAM=[
@@ -1529,6 +1606,104 @@ sBtn.onclick=function(){ SAVE.muted=!SAVE.muted; save(); sLabel(); if(!SAVE.mute
 
 /* ================= INIT ================= */
 if(SAVE.name){ enterClub(SAVE.name); } else { document.getElementById('nameInput').focus(); }
+
+/* ==================== ARENDELLE (FROZEN) ==================== */
+var FZFAM=[
+ {e:'❄️',n:'Elsa',ru:'Эльза',en:'"The Snow Queen. My magic is powerful — and I must hide it."',enRu:'«Снежная королева. Моя магия сильна — и я должна её прятать.»'},
+ {e:'🌻',n:'Anna',ru:'Анна',en:'"The fearless sister! I will bring my sister back — with true love!"',enRu:'«Бесстрашная сестра! Я верну сестру — с помощью настоящей любви!»'},
+ {e:'⛄',n:'Olaf',ru:'Олаф',en:'"Hi! I like warm hugs. And summer is the best thing ever!"',enRu:'«Привет! Я обожаю тёплые обнимашки. А лето — это лучшее, что есть!»'},
+ {e:'🧊',n:'Kristoff',ru:'Кристофф',en:'"Ice salesman, mountain man. Reindeers are better than people."',enRu:'«Торговец льдом, горец. Олени лучше людей.»'},
+ {e:'🦌',n:'Sven',ru:'Свен',en:'"Kristoff\'s best friend. Loves carrots!"',enRu:'«Лучший друг Кристоффа. Обожает морковку!»'},
+ {e:'🎖️',n:'Hans',ru:'Ханс',en:'"A prince from the Southern Isles... but is he a hero?"',enRu:'«Принц Южных островов... но герой ли он?»'}
+];
+var FZCH=[["Chapter 1 · Childhood","Do You Want to Build a Snowman?"],["Chapter 2 · Coronation Day","For the First Time in Forever"],["Chapter 3 · Love Is an Open Door","Hans and Anna"],["Chapter 4 · Let It Go","Elsa flees to the mountains"],["Chapter 5 · Anna Meets Kristoff","Reindeers Are Better Than People"],["Chapter 6 · Olaf","In Summer"],["Chapter 7 · The Ice Palace","For the First Time in Forever (Reprise)"],["Chapter 8 · The Thaw","An act of true love"]];
+var FSONGS=[
+ {id:'snowman',title:'Do You Want to Build a Snowman?',emoji:'⛄',yt:'Disney Frozen Do You Want to Build a Snowman official',
+  vocab:[['snowman','снеговик','⛄'],['build','строить','🔨'],['play','играть','⚽'],['anymore','больше (не...)','🚫'],['buddies','друзья','👯'],['magic','магия','✨']],
+  gaps:[["Do you want to build a __?","snowman"],["Come on, let's go and __.","play"],["I never see you __.","anymore"],["It doesn't have to be a __.","snowman"],["Okay, __.","bye"]],
+  qs:[["What does Anna want to do with Elsa?","Что Анна хочет делать с Эльзой?"],["Why is Elsa sad and alone in her room?","Почему Эльза грустит в одиночестве?"],["Do YOU want to build a snowman? Tell your teacher!","А ТЫ хочешь собрать снеговика? Расскажи учителю!"]]},
+ {id:'firsttime',title:'For the First Time in Forever',emoji:'🎉',yt:'Disney Frozen For the First Time in Forever official',
+  vocab:[['forever','вечность','⏳'],['coronation','коронация','👑'],['gates','ворота','🏰'],['stranger','незнакомец','🧍'],['chocolate','шоколад','🍫'],['dream','мечта','💭']],
+  gaps:[["For the first time in __.","forever"],["There'll be __, there'll be fun.","actual"],["I suddenly see him __ there.","standing"],["A beautiful stranger, __ and fair.","tall"],["I wanna stuff some __ in my face.","chocolate"]],
+  qs:[["What is happening in Arendelle today?","Что происходит сегодня в Эренделле?"],["What does Anna dream about?","О чём мечтает Анна?"]]},
+ {id:'opendoor',title:'Love Is an Open Door',emoji:'💕',yt:'Disney Frozen Love Is an Open Door official',
+  vocab:[['open door','открытая дверь','🚪'],['crazy','безумный','🤪'],['sandwich','сэндвич','🥪'],['finish','заканчивать','🏁'],['mind','разум','🧠'],['together','вместе','👫']],
+  gaps:[["Love is an open __.","door"],["Jinx! __ again.","jinx"],["Our mental synchronization can have __ one explanation.","but"],["We finish each other's __.","sandwiches"],["I've never met someone who thinks so much like __.","me"]],
+  qs:[["Do you believe in love at first sight?","Веришь ли ты в любовь с первого взгляда?"],["Hans and Anna finish each other's sentences. Do you have a person like this?","Ганс и Анна заканчивают фразы друг за друга. Есть у тебя такой человек?"]]},
+ {id:'letitgo',title:'Let It Go',emoji:'❄️',yt:'Disney Frozen Let It Go official sing along',
+  vocab:[['let it go','отпустить','🕊️'],['cold','холод','❄️'],['fear','страх','😨'],['storm','буря','🌨️'],['free','свободный','🆓'],['queen','королева','👸']],
+  gaps:[["Can't __ it back anymore.","hold"],["The __ never bothered me anyway.","cold"],["It's funny how some __ makes everything seem small.","distance"],["The fears that once controlled me can't get to me at __.","all"],["Here I __, in the light of day.","stand"]],
+  qs:[["What does «let it go» mean? What can YOU let go?","Что значит «отпустить»? Что можешь отпустить ТЫ?"],["Why does Elsa feel free on the mountain?","Почему Эльза чувствует себя свободной в горах?"]]},
+ {id:'reindeer',title:'Reindeer(s) Are Better Than People',emoji:'🦌',yt:'Disney Frozen Reindeers Are Better Than People official',
+  vocab:[['reindeer','северный олень','🦌'],['people','люди','🧑'],['true','правда','✔️'],['beat','бить','👊'],['curse','проклинать','🤬'],['smell','нюхать','👃']],
+  gaps:[["Reindeers are better than __.","people"],["Sven, don't you think that's __?","true"],["People will beat you and __ you.","curse"],["But people smell better than __.","reindeers"]],
+  qs:[["Do you agree: are animals better than people? Why?","Согласен ли ты: животные лучше людей? Почему?"]]},
+ {id:'insummer',title:'In Summer',emoji:'☀️',yt:'Disney Frozen In Summer official',
+  vocab:[['summer','лето','☀️'],['cuddle','обниматься','🤗'],['breeze','бриз','🌬️'],['melt','таять','🫠'],['dream','мечта','💭'],['happy','счастливый','😊']],
+  gaps:[["Winter's a good time to stay in and __.","cuddle"],["But put me in __ and I'll be a happy snowman!","summer"],["I'll finally see a summer __.","breeze"],["When life gets rough I like to hold on to my __.","dream"]],
+  qs:[["Olaf loves summer, but he is a snowman! What will happen to him?","Олаф любит лето, но он снеговик! Что с ним случится?"]]},
+ {id:'reprise',title:'For the First Time in Forever (Reprise)',emoji:'🏔️',yt:'Disney Frozen For the First Time in Forever reprise official',
+  vocab:[['protect','защищать','🛡️'],['afraid','испуганный','😨'],['alone','одинокий','😔'],['free','свободный','🕊️'],['goodbye','прощание','👋'],['true love','настоящая любовь','💗']],
+  gaps:[["You don't have to __ me.","protect"],["I'm not __.","afraid"],["I am alone, but I'm alone and __.","free"],["Then she changed your __.","mind"],["Our__ isn't fear.","enemy"]],
+  qs:[["The sisters argue on the mountain. Who is right?","Сёстры спорят в горах. Кто прав?"],["What is stronger than fear, in your opinion?","Что сильнее страха, по-твоему?"]]}
+];
+function renderFzHub(){
+ var fam=document.getElementById('fzFam');
+ if(fam){ fam.innerHTML='';
+  FZFAM.forEach(function(f,i){ var d=document.createElement('div'); d.className='person '+(i%2?'tilt2':'tilt1'); d.style.background='#eef7ff';
+   d.innerHTML='<div style="width:84px;height:118px;flex:none;display:flex;align-items:center;justify-content:center;font-size:56px;background:#dbeefc;border:3px solid #222;border-radius:18px;box-shadow:3px 4px 0 rgba(0,0,0,.4)">'+f.e+'</div><div class="bubble tail-l"><div class="who">'+f.n+' · '+f.ru+'</div><div style="font-size:14.5px;line-height:1.4" data-ru="'+f.enRu.replace(/"/g,'&quot;')+'">'+f.en+'</div></div>';
+   fam.appendChild(d); });
+ }
+ var sg=document.getElementById('fzSongs');
+ if(sg){ sg.innerHTML='';
+  FSONGS.forEach(function(s,i){ var d=document.createElement('div');
+   d.className='card songcard tilt'+((i%3)+1); d.style.background='#eef7ff'; d.style.textAlign='center';
+   d.innerHTML='<div style="font-size:42px">'+s.emoji+'</div><h3 style="margin:6px 0 2px;font-size:16px">'+s.title+'</h3><div class="small" data-ru="Слова, задания и клип">vocabulary · tasks · video</div>';
+   d.onclick=function(){ openFSong(s.id); }; sg.appendChild(d); });
+ }
+ var ch=document.getElementById('fzChapters');
+ if(ch){ ch.innerHTML='';
+  FZCH.forEach(function(c,i){ var d=document.createElement('div'); d.className='card epcard tilt'+((i%2)+1); d.style.background='#eef7ff';
+   d.innerHTML='<div><span class="badge2">🔒 SOON</span><h3 style="margin:6px 0 2px;font-size:17px">'+c[0]+'</h3><div class="ru" style="color:#666">'+c[1]+'</div></div><div style="margin-left:auto"><button class="btn ghost" disabled>Coming soon</button></div>';
+   ch.appendChild(d); });
+ }
+}
+function openFSong(id){
+ var s=null; FSONGS.forEach(function(x){ if(x.id===id) s=x; });
+ if(!s) return;
+ var R=document.getElementById('fsongRoot');
+ document.body.setAttribute('data-world','frozen'); renderDeco('frozen');
+ document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});
+ document.getElementById('page-fsong').classList.add('on');
+ window.scrollTo({top:0}); sfx.pop();
+ var chips=s.vocab.map(function(v){return '<button class="lword hw" data-ru="» '+esc(v[1])+'">'+v[2]+' '+esc(v[0])+'</button>'}).join('');
+ var gaps=''; s.gaps.forEach(function(g,i){ gaps+='<div class="scene-line" style="font-size:17px">'+(i+1)+'. '+g[0].replace('__','<button class="scene-gap" data-i="'+i+'">?</button>')+'</div>'; });
+ var qs=''; s.qs.forEach(function(q,i){ qs+='<div class="warmq"><div class="qn">'+(i+1)+'</div><div style="font-size:15px">'+q[0]+'<div class="ru" style="color:#666;font-size:12.5px">'+q[1]+'</div></div></div>'; });
+ R.innerHTML='<div class="pgbtn"><button class="btn ghost" id="fsBack" data-ru="Назад">← Frozen</button><span></span></div>'
+  +'<div style="text-align:center"><div style="font-size:58px">'+s.emoji+'</div><div class="stitle" style="font-size:clamp(20px,4vw,30px)">'+s.title+'</div></div>'
+  +'<div class="playerbar"><a class="ytbtn" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(s.yt)+'">▶ Watch & listen on YouTube · Слушай песню</a>'
+  +'<div class="pmeta"><b>Listen to the song first!</b> · Сначала послушай песню (официальный клип Disney на YouTube), потом возвращайся к заданиям.</div></div>'
+  +'<div class="card" style="margin-top:14px"><h3 style="margin:0 0 6px" data-ru="Слова из песни">Words from the song · Слова из песни</h3><div class="listengrid">'+chips+'</div></div>'
+  +'<div class="card scene-card" style="margin-top:14px"><div class="scenetitle">Fill the lines · Вставь слова</div>'+gaps
+  +'<div class="quiz-foot" style="margin-top:10px"><button class="btn pink" id="fsCheck" style="color:#fff">Check · Проверить</button><span id="fsFb" style="font-weight:800"></span></div></div>'
+  +'<div class="card" style="margin-top:14px"><h3 style="margin:0 0 6px" data-ru="Обсудим">Let\'s talk · Обсудим</h3>'+qs+'</div>';
+ document.getElementById('fsBack').onclick=function(){ go('frozen'); };
+ R.querySelectorAll('.hw').forEach(function(b){ b.onclick=function(){ b.classList.toggle('on'); sfx.pop(); }; });
+ R.querySelectorAll('.scene-gap').forEach(function(g){
+  g.onclick=function(){ g.textContent=prompt('Write the missing word · Напиши пропущенное слово:'); if(g.textContent){g.classList.add('filled'); sfx.pop();} };
+ });
+ document.getElementById('fsCheck').onclick=function(){
+  var got=0;
+  R.querySelectorAll('.scene-gap').forEach(function(g){
+   g.style.pointerEvents='none';
+   var i=+g.dataset.i, ok=g.textContent && g.textContent.trim().toLowerCase()===s.gaps[i][1].toLowerCase();
+   if(ok){ g.classList.add('right'); got++; } else { g.classList.add('wrong'); g.textContent=s.gaps[i][1]; }
+  });
+  document.getElementById('fsFb').textContent=got+' / '+s.gaps.length;
+  if(got===s.gaps.length){ sfx.fanfare(); try{confettiBurst();}catch(e){} } else sfx.wrong();
+ };
+}
+
 </script>
 
 <script>if(!SAVE.hol) SAVE.hol={};
@@ -1550,7 +1725,22 @@ var HOLP={id:null,hasFile:false,audio:null,rate:1,playing:false,
  ui:function(){ var b=document.getElementById('holPlay'); if(b) b.textContent=this.playing?'⏸':'▶'; }
 };
 function holDone(id,lvl){ var h=SAVE.hol[id]||{}; return (h.done&&h.done[lvl])||{}; }
-function holMark(id,lvl,type,body){ var h=SAVE.hol[id]||{}; h.done=h.done||{}; h.done[lvl]=h.done[lvl]||{}; h.done[lvl][type]=true; SAVE.hol[id]=h; save(); sfx.correct(); renderHolTasks(id,lvl); }
+function holMark(id,lvl,type,body){
+  var h=SAVE.hol[id]||{}; h.done=h.done||{}; h.done[lvl]=h.done[lvl]||{}; h.done[lvl][type]=true; SAVE.hol[id]=h; save();
+  sfx.correct();
+  try{ confettiBurst(); }catch(e){}
+  renderHolTasks(id,lvl);
+  setTimeout(function(){
+    var boxes=[document.getElementById('holWhile'),document.getElementById('holAfter')];
+    for(var b=0;b<boxes.length;b++){
+      if(!boxes[b]) continue;
+      var cards=boxes[b].querySelectorAll('.card');
+      for(var c=0;c<cards.length;c++){
+        if(cards[c].innerHTML.indexOf('✓ done')<0){ cards[c].scrollIntoView({behavior:'smooth',block:'start'}); return; }
+      }
+    }
+  },200);
+}
 
 function buildHolHub(){
  var g=document.getElementById('holGrid'); if(!g) return; g.innerHTML='';
@@ -1584,7 +1774,7 @@ function openHol(id,lvl){
   +'<div style="font-size:64px;line-height:1.1;margin:6px 0">'+h.emoji+'</div>'
   +'<div class="stitle">'+h.name+'</div><div class="ep-ru" style="margin-top:6px">'+h.ru+'</div>'
   +'<div style="margin:12px 0 2px">'+lvchips+'</div>'
-  +'<div class="small" data-ru="Выбери свой уровень">Choose your level · A1 easy — A2 medium — B1 hard</div></div>'
+  +'<div class="small" data-ru="A1 — слушаем и нажимаем, с опорой на картинки. A2 — думаем и собираем. B1 — без подсказок, полное погружение!">A1 light: listen & tap, picture support · A2 medium: think & build · B1 hard: no hints, full immersion!</div></div>'
   +'<div class="playerbar"><button class="pbtn" id="holPlay" data-ru="Слушать">▶</button><button class="tfb" id="holRate" data-ru="Скорость">×1</button>'
   +'<div class="pmeta" data-ru="Нажми Play. Можно поставить на паузу и менять скорость."><b>Listen to the text</b> · Press Play. You can pause and change the speed.<br><span class="small" style="color:#777">'+h.text.split(' ').length+' words</span></div></div>'
   +'<details class="trx" style="margin:10px 0"><summary data-ru="Показать текст">📄 Show transcript · Транскрипт</summary><div style="margin-top:8px;line-height:1.6">'+esc(h.text)+'</div></details>'
@@ -1602,6 +1792,7 @@ function openHol(id,lvl){
  R.querySelectorAll('[data-ht]').forEach(function(b){ b.onclick=function(){ sfx.pop();
    R.querySelectorAll('[data-ht]').forEach(function(x){x.classList.remove('on')}); b.classList.add('on');
    ['before','while','after'].forEach(function(t){ document.getElementById('hol'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('hide', t!==b.dataset.ht); });
+   try{ b.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
   }; });
  // BEFORE pane
  document.getElementById('holBefore').innerHTML =
@@ -1654,7 +1845,7 @@ function rHunt(id,lvl,body,isDone){
   b.onclick=function(){ if(b.dataset.lock)return; b.dataset.lock=1;
    if(!x.d){ b.classList.add('on'); score++; caught++; sfx.correct(); } else { b.classList.add('bad'); b.style.background='var(--red)'; b.style.color='#fff'; score=Math.max(0,score-1); sfx.wrong(); }
    body.querySelector('.hunt-score').textContent=score;
-   if(caught>=h.vocab.length){ body.querySelector('.hunt-msg').textContent= score>=h.vocab.length ? 'Perfect ears! · Отличный слух!' : 'Nice! · Хорошо!'; }
+   if(caught>=h.vocab.length){ body.querySelector('.hunt-msg').textContent= score>=h.vocab.length ? 'Perfect ears! · Отличный слух!' : 'Nice! · Хорошо!'; try{confettiBurst();}catch(e){} }
   };
   grid.appendChild(b); });
  body.querySelector('.btn.yellow').onclick=function(){ holMark(id,lvl,'hunt',body); };
@@ -1663,30 +1854,79 @@ function rSeq(id,lvl,body,isDone,items,showRu){
  if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
  var idx=items.map(function(_,i){return i});
  for(var i=idx.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=idx[i];idx[i]=idx[j];idx[j]=t;}
- body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Слушай и расставляй">Listen and order</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на фразы в том порядке, в каком слышишь их в тексте.">Click the phrases in the order you hear them in the text.</div><div class="hol-seq"></div><div class="quiz-foot"><button class="btn pink" style="color:#fff">Check</button><span class="hol-fb" style="font-weight:800"></span></div>';
- var seq=body.querySelector('.hol-seq'), picked=[];
- idx.forEach(function(n){ var d=document.createElement('div'); d.className='card ordcard'; d.style.marginBottom='8px'; d.style.padding='8px 14px'; d.dataset.n=n;
-  d.innerHTML='<span class="ordnum"></span><div>'+items[n][0]+(showRu?'<div class="ru" style="font-size:12px;color:#777">'+items[n][1]+'</div>':'')+'</div>';
-  d.onclick=function(){ var p=picked.indexOf(n); if(p>=0)picked.splice(p,1); else picked.push(n);
-   seq.querySelectorAll('.ordcard').forEach(function(x){ var k=+x.dataset.n, pp=picked.indexOf(k); x.classList.toggle('picked',pp>=0); x.querySelector('.ordnum').textContent=pp>=0?(pp+1):''; }); sfx.pop(); };
-  seq.appendChild(d); });
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Слушай и собирай">Listen and build</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на фразы в том порядке, как они звучат в тексте.">Tap the phrases in the order you hear them in the text.</div>'
+  +'<div class="tl-track">'+items.map(function(_,i){return '<div class="tl-slot" data-i="'+i+'"><span class="tl-n">'+(i+1)+'</span></div>'}).join('')+'</div>'
+  +'<div class="tl-bank">'+idx.map(function(n){return '<div class="tl-card" data-n="'+n+'"'+(showRu?' data-ru="'+esc(items[n][1]).replace(/"/g,'&quot;')+'"':'')+'>'+items[n][0]+'</div>'}).join('')+'</div>'
+  +'<div class="quiz-foot" style="margin-top:12px"><button class="btn pink" style="color:#fff">Check</button><button class="btn ghost hide">Try again</button><span class="hol-fb" style="font-weight:800"></span></div>';
+ var bank=body.querySelector('.tl-bank');
+ body.querySelectorAll('.tl-card').forEach(function(c){
+  c.onclick=function(){
+   if(c.dataset.used)return;
+   var free=body.querySelector('.tl-slot:not(.filled)');
+   if(!free)return;
+   c.dataset.used=1; c.style.opacity='.3'; c.style.pointerEvents='none';
+   free.classList.add('filled'); free.dataset.n=c.dataset.n;
+   free.innerHTML='<span class="tl-n">'+(+free.dataset.i+1)+'</span>'+c.innerHTML;
+   sfx.pop();
+  };
+ });
+ body.querySelectorAll('.tl-slot').forEach(function(slot){
+  slot.onclick=function(){
+   if(!slot.classList.contains('filled')||slot.dataset.lock)return;
+   var n=slot.dataset.n;
+   slot.classList.remove('filled','right','wrong'); slot.innerHTML='<span class="tl-n">'+(+slot.dataset.i+1)+'</span>'; delete slot.dataset.n;
+   var card=body.querySelector('.tl-card[data-n="'+n+'"]');
+   if(card){ card.dataset.used=''; card.style.opacity='1'; card.style.pointerEvents='auto'; }
+   sfx.pop();
+  };
+ });
  body.querySelector('.btn.pink').onclick=function(){
-  var ok=picked.length===items.length; for(var k=0;k<picked.length;k++){ if(picked[k]!==k) ok=false; }
-  seq.querySelectorAll('.ordcard').forEach(function(x){ x.style.pointerEvents='none'; var p=picked.indexOf(+x.dataset.n); if(p===+x.dataset.n)x.classList.add('right'); else if(p>=0)x.classList.add('wrong'); });
-  if(ok){ sfx.fanfare(); holMark(id,lvl,(items===HOL_TASKS[id].seqw?'seqw':'seq'),body); } else { sfx.wrong(); body.querySelector('.hol-fb').textContent='Check the green order · Посмотри порядок'; }
+  var all=true;
+  body.querySelectorAll('.tl-slot').forEach(function(slot){
+   slot.dataset.lock=1;
+   if(!slot.classList.contains('filled')){ all=false; return; }
+   if(+slot.dataset.n===+slot.dataset.i){ slot.classList.add('right'); }
+   else { slot.classList.add('wrong'); all=false; }
+  });
+  if(all){
+   sfx.fanfare(); try{confettiBurst();}catch(e){}
+   body.querySelector('.hol-fb').textContent='Perfect! · Идеально!';
+   setTimeout(function(){ holMark(id,lvl,(items===HOL_TASKS[id].seqw?'seqw':'seq'),body); },900);
+  } else {
+   sfx.wrong();
+   body.querySelector('.hol-fb').textContent='Green is right · Зелёные верны';
+   body.querySelector('.btn.ghost').classList.remove('hide');
+  }
  };
+ body.querySelector('.btn.ghost').onclick=function(){ rSeq(id,lvl,body,isDone,items,showRu); };
 }
-function rDetails(id,lvl,body,isDone){
+function rDetails(id,lvl,body,isDone,showRu){
  var T=HOL_TASKS[id];
  if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
- body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Проверь себя">Check yourself</h3><div class="small" style="margin-bottom:8px" data-ru="Ответь на вопросы о тексте.">Answer the questions about the text.</div><div class="hol-det"></div>';
- var box=body.querySelector('.hol-det'), got=0;
- T.details.forEach(function(q,qi){ var d=document.createElement('div'); d.className='quiz-q';
-  d.innerHTML='<div class="qq">'+(qi+1)+'. '+q[0]+'</div>';
-  q[1].forEach(function(o,oi){ var l=document.createElement('label'); l.className='opt'; l.style.cursor='pointer'; l.innerHTML='<input type="radio" name="d'+qi+'" style="margin-right:9px">'+esc(o);
-   l.onclick=function(){ if(d.dataset.lock)return; if(oi===q[2]){ d.dataset.lock=1; l.classList.add('ok'); sfx.correct(); got++; if(got>=T.details.length){ sfx.fanfare(); holMark(id,lvl,'details',body); } } else { l.classList.add('bad'); l.style.pointerEvents='none'; sfx.wrong(); } };
-   d.appendChild(l); });
-  box.appendChild(d); });
+ var items=T.details, idx=0, got=0, marks={};
+ function renderItem(){
+  var q=items[idx];
+  var h='<h3 style="margin:0 0 4px" data-ru="Охота за деталями">Detail hunt</h3><div class="small" style="margin-bottom:8px" data-ru="Послушай текст ещё раз и ответь. Каждая деталь важна!">Listen again and answer. Every detail matters!</div>'
+   +'<div class="gq-card"><div class="gq-bubble">'+(idx+1)+'. '+q[0]+'</div><div class="gq-opts">';
+  q[1].forEach(function(o,oi){ h+='<button class="gq-opt" data-oi="'+oi+'">'+esc(o)+'</button>'; });
+  h+='</div><div class="gq-dots">'+items.map(function(_,i){ var c=i<idx?'on':''; if(i<idx&&marks[i])c+=' bad'; return '<span class="'+c+'"></span>'; }).join('')+'</div>'
+   +'<div class="small" style="margin-top:8px">'+(idx+1)+' / '+items.length+'</div></div>';
+  body.innerHTML=h;
+  body.querySelectorAll('.gq-opt').forEach(function(b){
+   b.onclick=function(){
+    var oi=+b.dataset.oi;
+    body.querySelectorAll('.gq-opt').forEach(function(x){ x.style.pointerEvents='none'; });
+    if(oi===q[2]){ b.classList.add('ok'); got++; sfx.correct(); try{confettiBurst();}catch(e){} }
+    else { b.classList.add('bad'); marks[idx]=true; sfx.wrong(); var okb=body.querySelector('.gq-opt[data-oi="'+q[2]+'"]'); if(okb) okb.classList.add('ok'); }
+    setTimeout(function(){ idx++; if(idx<items.length) renderItem(); else finish(); },900);
+   };
+  });
+ }
+ function finish(){
+  body.innerHTML='<div style="text-align:center;font-weight:800;color:var(--green);font-size:18px">✓ '+got+' / '+items.length+' — Great! · Отлично!</div>';
+  holMark(id,lvl,'details',body);
+ }
+ renderItem();
 }
 function rWrite(id,lvl,body,isDone){
  var T=HOL_TASKS[id];
@@ -1793,18 +2033,37 @@ function rMatchPic(id,lvl,body,isDone){
 function rBoss(id,lvl,body,isDone){
  var h=HOLIDAYS[id];
  if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
- var qs=h.vocab.slice(0,6).map(function(v){ var wrong=[]; var pool=h.vocab.filter(function(x){return x[0]!==v[0];});
+ var items=h.vocab.slice(0,6), idx=0, got=0;
+ function mkq(v){
+  var wrong=[]; var pool=h.vocab.filter(function(x){return x[0]!==v[0];});
   while(wrong.length<2){ var c=pool[Math.floor(Math.random()*pool.length)][0]; if(wrong.indexOf(c)<0) wrong.push(c); }
   var opts=wrong.concat([v[0]]); for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
-  return {prompt:v[2]+' · '+v[1], opts:opts, a:opts.indexOf(v[0])}; });
- body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Словарный босс">Word boss</h3><div class="small" style="margin-bottom:8px" data-ru="Вспомни английские слова! Выбери правильный перевод.">Remember the English words! Pick the correct one. No mistakes allowed!</div><div class="hol-det"></div>';
- var box=body.querySelector('.hol-det'), got=0;
- qs.forEach(function(q,qi){ var d=document.createElement('div'); d.className='quiz-q';
-  d.innerHTML='<div class="qq" style="font-size:18px">'+(qi+1)+'. '+esc(q.prompt)+' = ?</div>';
-  q.opts.forEach(function(o,oi){ var l=document.createElement('label'); l.className='opt'; l.style.cursor='pointer'; l.innerHTML='<input type="radio" name="b'+qi+'" style="margin-right:9px">'+esc(o);
-   l.onclick=function(){ if(d.dataset.lock)return; if(oi===q.a){ d.dataset.lock=1; l.classList.add('ok'); sfx.correct(); got++; if(got>=qs.length){ sfx.fanfare(); holMark(id,lvl,'boss',body); } } else { l.classList.add('bad'); l.style.pointerEvents='none'; sfx.wrong(); } };
-   d.appendChild(l); });
-  box.appendChild(d); });
+  return {prompt:v[2]+' · '+v[1], opts:opts, a:opts.indexOf(v[0])};
+ }
+ var qs=items.map(mkq);
+ function renderItem(){
+  var q=qs[idx];
+  var hh='<h3 style="margin:0 0 4px" data-ru="Словарный босс">Word boss</h3><div class="small" style="margin-bottom:8px" data-ru="Вспомни английские слова!">Remember the English words! No mistakes allowed!</div>'
+   +'<div class="gq-card"><div class="gq-bubble" style="font-size:20px">'+(idx+1)+'. '+esc(q.prompt)+' = ?</div><div class="gq-opts">';
+  q.opts.forEach(function(o,oi){ hh+='<button class="gq-opt" data-oi="'+oi+'">'+esc(o)+'</button>'; });
+  hh+='</div><div class="gq-dots">'+qs.map(function(_,i){ return '<span class="'+(i<idx?'on':'')+'"></span>'; }).join('')+'</div>'
+   +'<div class="small" style="margin-top:8px">'+(idx+1)+' / '+qs.length+'</div></div>';
+  body.innerHTML=hh;
+  body.querySelectorAll('.gq-opt').forEach(function(b){
+   b.onclick=function(){
+    var oi=+b.dataset.oi;
+    body.querySelectorAll('.gq-opt').forEach(function(x){ x.style.pointerEvents='none'; });
+    if(oi===q.a){ b.classList.add('ok'); got++; sfx.correct(); try{confettiBurst();}catch(e){} }
+    else { b.classList.add('bad'); sfx.wrong(); var okb=body.querySelector('.gq-opt[data-oi="'+q.a+'"]'); if(okb) okb.classList.add('ok'); }
+    setTimeout(function(){ idx++; if(idx<qs.length) renderItem(); else finish(); },900);
+   };
+  });
+ }
+ function finish(){
+  body.innerHTML='<div style="text-align:center;font-weight:800;color:var(--green);font-size:18px">✓ '+got+' / '+qs.length+' — Boss beaten! · Босс побеждён!</div>';
+  holMark(id,lvl,'boss',body);
+ }
+ renderItem();
 }
 
 function rGame(id,host){
