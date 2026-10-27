@@ -402,6 +402,8 @@ body[data-world="frozen"] .warmq .ru{color:#4a5f7e}
 .songcard:hover{transform:translateY(-4px) rotate(-.5deg)}
 .ytbtn{display:inline-block;font:inherit;font-weight:800;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);padding:8px 18px;cursor:pointer;box-shadow:4px 4px 0 rgba(43,43,43,.85);text-decoration:none}
 
+.scene-gap.sel{outline:4px solid var(--blue);border-radius:8px}
+.gq-opt.sel{outline:4px solid var(--blue)}
 </style>
 </head>
 <body>
@@ -1177,7 +1179,7 @@ function rWho(G){
   renderItem();
 }
 function rTimeline(G){
-  var items=G.ep.order, el=document.getElementById('game-'+G.epid);
+  var items=G.ep.order, el=document.getElementById('game-'+G.epid), attempts=0;
   var idx=items.map(function(_,i){return i});
   for(var i=idx.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=idx[i];idx[i]=idx[j];idx[j]=t;}
   var h=gameHead(G,'Story timeline · Лента событий','Tap the events in the order of the episode · Нажимай на события в том порядке, как они были в серии')
@@ -1206,9 +1208,21 @@ function rTimeline(G){
       sfx.pop();
     };
   });
+  function reveal(){
+    el.querySelectorAll('.tl-slot').forEach(function(slot,i){
+      slot.dataset.lock=1; slot.classList.remove('wrong'); slot.classList.add('filled','right');
+      slot.innerHTML='<span class="tl-n">'+(i+1)+'</span>'+items[i].en+'<div class="ru" style="font-size:11px;color:#777">'+items[i].ru+'</div>';
+    });
+    el.querySelectorAll('.tl-card').forEach(function(c){ c.dataset.used=1; c.style.opacity='.2'; c.style.pointerEvents='none'; });
+    document.getElementById('tlFb').textContent='The right order · Правильный порядок';
+    var nx=document.createElement('button'); nx.className='btn yellow'; nx.id='tlNext'; nx.textContent='Continue → · Дальше';
+    document.getElementById('tlCheck').parentNode.appendChild(nx);
+    nx.onclick=function(){ nextRound(G); };
+  }
   document.getElementById('tlCheck').onclick=function(){
     var all=true, correct=0;
     el.querySelectorAll('.tl-slot').forEach(function(slot){
+      if(slot.dataset.lock)return;
       slot.dataset.lock=1;
       if(!slot.classList.contains('filled')){ all=false; return; }
       if(+slot.dataset.n===+slot.dataset.i){ slot.classList.add('right'); correct++; }
@@ -1218,19 +1232,34 @@ function rTimeline(G){
       G.score+=5; updateGScore(G); sfx.fanfare(); confettiBurst(); G.stars=(G.stars||0)+3;
       setTimeout(function(){ splash(G,'🗺️',3,'Perfect order! · Идеальный порядок!',function(){ nextRound(G); }); },900);
     } else {
+      attempts++;
       sfx.wrong();
-      document.getElementById('tlFb').textContent='Green is right · Зелёные — верный порядок';
-      document.getElementById('tlRetry').classList.remove('hide');
+      if(attempts>=2){
+        reveal();
+      } else {
+        document.getElementById('tlFb').textContent='Not quite — one more try · Не совсем — ещё одна попытка';
+        document.getElementById('tlRetry').classList.remove('hide');
+      }
     }
   };
-  document.getElementById('tlRetry').onclick=function(){ rTimeline(G); };
+  document.getElementById('tlRetry').onclick=function(){
+    attempts=0;
+    el.querySelectorAll('.tl-slot').forEach(function(slot,i){
+      delete slot.dataset.lock; slot.classList.remove('filled','right','wrong');
+      slot.innerHTML='<span class="tl-n">'+(i+1)+'</span>';
+      delete slot.dataset.n;
+    });
+    el.querySelectorAll('.tl-card').forEach(function(c){ c.dataset.used=''; c.style.opacity='1'; c.style.pointerEvents='auto'; });
+    document.getElementById('tlFb').textContent='';
+    document.getElementById('tlRetry').classList.add('hide');
+  };
 }
 function rScene(G){
   var items=G.ep.gap, el=document.getElementById('game-'+G.epid);
   var st=G.ep.sceneTitle||['Fill it in','Заполни пропуски'];
   var words=items.map(function(it){return it.ans});
   for(var i=words.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=words[i];words[i]=words[j];words[j]=t;}
-  var h=gameHead(G,'Word scene · Сцена со словами','Fill the gaps with the words below · Вставь слова из рамки в пропуски')
+  var h=gameHead(G,'Word scene · Сцена со словами','Tap a word, then tap any gap — or tap a gap first, then the word. · Нажми слово и любой пропуск — или сначала пропуск, потом слово.')
    +'<div class="card scene-card"><div class="scenetitle">'+st[0]+' <span style="color:#777;font-weight:600;font-size:13px">· '+st[1]+'</span></div>';
   items.forEach(function(it,i){
     h+='<div class="scene-line" data-ru="'+esc(it.ru).replace(/"/g,'&quot;')+'">'+(i+1)+'. '+it.en+' <button class="scene-gap" data-i="'+i+'">?</button> '+it.after+'</div>';
@@ -1240,24 +1269,29 @@ function rScene(G){
   el.innerHTML=h;
   el.querySelectorAll('.bw').forEach(function(b){
     b.onclick=function(){
-      var empty=null;
-      el.querySelectorAll('.scene-gap').forEach(function(g){ if(!g.classList.contains('filled')&&!empty) empty=g; });
-      if(!empty)return;
-      empty.textContent=b.dataset.w; empty.classList.add('filled'); empty.dataset.w=b.dataset.w;
+      var target=null;
+      el.querySelectorAll('.scene-gap.sel:not(.filled)').forEach(function(g){ if(!target) target=g; });
+      if(!target) el.querySelectorAll('.scene-gap:not(.filled)').forEach(function(g){ if(!target) target=g; });
+      if(!target)return;
+      target.textContent=b.dataset.w; target.classList.add('filled'); target.classList.remove('sel'); target.dataset.w=b.dataset.w;
       b.classList.add('used'); sfx.pop();
     };
   });
   el.querySelectorAll('.scene-gap').forEach(function(g){
     g.onclick=function(){
-      if(!g.classList.contains('filled'))return;
-      var w=g.dataset.w; g.textContent='?'; g.classList.remove('filled'); delete g.dataset.w;
-      el.querySelectorAll('.bw').forEach(function(b){ if(b.dataset.w===w) b.classList.remove('used'); });
+      if(g.classList.contains('filled')){
+        var w=g.dataset.w; g.textContent='?'; g.classList.remove('filled'); delete g.dataset.w;
+        el.querySelectorAll('.bw').forEach(function(b){ if(b.dataset.w===w) b.classList.remove('used'); });
+        return;
+      }
+      el.querySelectorAll('.scene-gap.sel').forEach(function(x){ x.classList.remove('sel'); });
+      g.classList.add('sel'); sfx.pop();
     };
   });
   document.getElementById('scCheck').onclick=function(){
     var got=0;
     el.querySelectorAll('.scene-gap').forEach(function(g){
-      g.style.pointerEvents='none';
+      g.style.pointerEvents='none'; g.classList.remove('sel');
       var i=+g.dataset.i, ok=g.dataset.w && g.dataset.w.toLowerCase()===items[i].ans.toLowerCase();
       if(ok){ g.classList.add('right'); got++; } else { g.classList.add('wrong'); g.textContent=items[i].ans; }
     });
@@ -1605,7 +1639,7 @@ sLabel();
 sBtn.onclick=function(){ SAVE.muted=!SAVE.muted; save(); sLabel(); if(!SAVE.muted) sfx.pop(); };
 
 /* ================= INIT ================= */
-if(SAVE.name){ enterClub(SAVE.name); } else { document.getElementById('nameInput').focus(); }
+/* init moved to end of script */
 
 /* ==================== ARENDELLE (FROZEN) ==================== */
 var FZFAM=[
@@ -1704,6 +1738,7 @@ function openFSong(id){
  };
 }
 
+if(SAVE.name){ enterClub(SAVE.name); } else { document.getElementById('nameInput').focus(); }
 </script>
 
 <script>if(!SAVE.hol) SAVE.hol={};
@@ -1712,10 +1747,12 @@ var HOL_ORDER=["easter", "independence", "halloween", "thanksgiving", "christmas
 var HOL_TASKS={"thanksgiving": {"facts": [["Thanksgiving is always on a Thursday — so many Americans have a 4-day weekend.", "Праздник всегда в четверг, поэтому у многих американцев выходные 4 дня."], ["About 46 million turkeys are eaten every Thanksgiving!", "Каждый год съедают около 46 миллионов индеек!"], ["Macy's parade in New York is almost 100 years old.", "Парад Macy's в Нью-Йорку почти 100 лет."], ["Black Friday, the big shopping day, comes right after it.", "Сразу после него идёт «Чёрная пятница» — день больших распродаж."]], "warm": [["What are you thankful for? Tell about three things.", "За что ты благодарен? Назови три вещи."], ["Do you have a big dinner with your family? What food?", "У вас бывает большой семейный ужин? Какая еда?"], ["Do people in your country help poor people? How?", "Люди в твоей стране помогают бедным? Как?"]], "seq": [["Settlers had a hard winter", "У поселенцев была тяжёлая зима"], ["Native Americans taught them to grow food", "Индейцы научили их выращивать еду"], ["Big harvest in autumn", "Большой урожай осенью"], ["A big feast for everyone", "Большой пир для всех"], ["Today: family dinner and parades", "Сегодня: семейный ужин и парады"]], "seqw": [["English settlers came to America", "Английские поселенцы приехали в Америку"], ["The first winter was very hard", "Первая зима была очень тяжёлой"], ["Native Americans helped the settlers", "Индейцы помогли поселенцам"], ["The settlers had a big harvest", "Поселенцы собрали большой урожай"], ["They had a feast together", "Они устроили пир вместе"], ["Today people watch parades and football", "Сегодня люди смотрят парады и футбол"]], "details": [["When is Thanksgiving?", ["On the fourth Thursday of November", "On 31 October", "On 4 July"], 0], ["When was the first Thanksgiving?", ["In 1621", "In 1776", "In 1492"], 0], ["Who helped the settlers?", ["The Native Americans", "The British king", "Pirates"], 0], ["What is the traditional food?", ["Turkey, mashed potatoes and pumpkin pie", "Pizza and cola", "Fish and rice"], 0], ["What do people watch on TV?", ["Parades and American football", "Horror films", "Cartoons only"], 0]], "write": [["The first Thanksgiving was in", "1621", "."], ["People celebrate it on the fourth of November.", "Thursday", ""], ["Native taught them to grow corn.", "Americans", ""], ["Many people do work on Thanksgiving.", "charity", ""]], "notext": ["The first Thanksgiving was in 1621.", "Native Americans taught the settlers to grow corn.", "People watch parades and football on TV.", "Children look for baskets of candy."], "dict": [["The first Thanksgiving was in", "1621", "."], ["They taught the settlers to grow.", "corn", ""], ["Thanksgiving is a time to be.", "grateful", ""]], "dictw": [["The first Thanksgiving was in", "1621", "."], ["They invited the Native to share the food.", "Americans", ""]], "game": {"kind": "table", "stages": ["🍽️", "🥗", "🍗", "🥧", "🦃⭐"], "qs": [["When is Thanksgiving?", ["The fourth Thursday of November", "31 October", "4 July"], 0], ["When was the first Thanksgiving?", ["1621", "1776", "1492"], 0], ["Who helped the settlers?", ["Native Americans", "The king", "Teachers"], 0], ["What is the traditional food?", ["Turkey and pumpkin pie", "Pizza", "Sushi"], 0], ["What do people do for others?", ["Charity work", "Nothing", "Sleep"], 0]]}, "levels": {"a1": {"while": ["hunt", "tf"], "after": ["seq", "details", "boss", "game", "speak"], "before": ["matchpic"]}, "a2": {"while": ["seqw", "tf"], "after": ["details", "write", "notext", "boss", "game", "speak"], "before": ["matchpic"]}, "b1": {"while": ["dictw"], "after": ["rebuild", "dict", "notext", "boss", "game", "speak"], "before": ["matchpic"]}}, "decoys": [["beach", "🏖️"], ["snowman", "⛄"], ["rocket", "🚀"]], "tf": [["Thanksgiving is only celebrated in the USA.", false], ["Families usually have a big dinner on Thanksgiving.", true], ["People watch football on Thanksgiving.", true], ["Thanksgiving is in July.", false]], "retellKw": ["1621", "turkey", "family", "parade", "grateful"]}, "halloween": {"facts": [["Halloween comes from an old Celtic festival 2,000 years old.", "Хэллоуин произошёл от кельтского праздника, которому 2000 лет."], ["Americans spend about 10 billion dollars on Halloween candy!", "Американцы тратят на хэллоуинские конфеты около 10 миллиардов долларов!"], ["The most popular costume is a witch.", "Самый популярный костюм — ведьма."], ["Ireland and Scotland celebrate Halloween too.", "Хэллоуин отмечают также в Ирландии и Шотландии."]], "warm": [["Do you like scary stories? Why or why not?", "Любишь ли ты страшные истории? Почему?"], ["What costume would you like to wear?", "В какой костюм ты бы хотел нарядиться?"], ["What is scary for you?", "Что для тебя страшно?"]], "seq": [["Children dress up in costumes", "Дети надевают костюмы"], ["They say «Trick or treat!»", "Они говорят «Сладость или гадость!»"], ["People give them candy", "Люди дают им конфеты"], ["People make jack-o-lanterns", "Люди делают светильники из тыкв"], ["Some people visit haunted houses", "Кто-то ходит в дома с привидениями"]], "seqw": [["Children wear costumes", "Дети надевают костюмы"], ["They go from house to house", "Они ходят от дома к дому"], ["They say «Trick or treat!»", "Они говорят «Сладость или гадость!»"], ["People give them candy", "Люди дают им конфеты"], ["People put jack-o-lanterns on their doors", "Люди ставят светильники на двери"], ["Many people visit haunted houses", "Многие ходят в дома с привидениями"]], "details": [["When is Halloween?", ["On 31 October", "On 25 December", "On 4 July"], 0], ["What do children say?", ["Trick or treat!", "Happy birthday!", "Thank you!"], 0], ["What is a jack-o-lantern?", ["A pumpkin with a face", "A cake with candles", "A special house"], 0], ["What do people put inside the pumpkin?", ["A candle", "A toy", "An egg"], 0], ["What are haunted houses?", ["Houses with actors in scary costumes", "Empty old houses", "Houses with many children"], 0]], "write": [["Halloween is on 31.", "October", ""], ["Children dress up as ghosts, witches, vampires or.", "skeletons", ""], ["A jack-o-lantern is a pumpkin with a.", "face", ""], ["People put a inside the pumpkin.", "candle", ""]], "notext": ["Children go from house to house.", "A jack-o-lantern is a pumpkin with a face.", "People put a candle inside.", "Children get toys at every house."], "dict": [["Halloween is on 31.", "October", ""], ["People put a inside the pumpkin.", "candle", ""], ["Many people visit houses.", "haunted", ""]], "dictw": [["Children say «Trick or", "treat", "!»"], ["A jack-o-lantern is a pumpkin with a.", "face", ""]], "game": {"kind": "pumpkin", "stages": ["🌱", "🍈", "🎃", "🕯️🎃", "🎃⭐"], "qs": [["When is Halloween?", ["31 October", "25 December", "4 July"], 0], ["What do children say?", ["Trick or treat!", "Good morning!", "Merry Christmas!"], 0], ["What is a jack-o-lantern?", ["A pumpkin with a face", "A cookie", "A costume"], 0], ["What's inside the pumpkin?", ["A candle", "A cat", "Candy"], 0], ["What do some people watch?", ["Horror films", "Cartoons", "Football"], 0]]}, "levels": {"a1": {"while": ["hunt", "tf"], "after": ["seq", "details", "boss", "game", "speak"], "before": ["matchpic"]}, "a2": {"while": ["seqw", "tf"], "after": ["details", "write", "notext", "boss", "game", "speak"], "before": ["matchpic"]}, "b1": {"while": ["dictw"], "after": ["rebuild", "dict", "notext", "boss", "game", "speak"], "before": ["matchpic"]}}, "decoys": [["turkey", "🦃"], ["present", "🎁"], ["snow", "❄️"]], "tf": [["Halloween is on 31 October.", true], ["Children say «Trick or treat!».", true], ["A jack-o-lantern is made from a watermelon.", false], ["Many people visit haunted houses.", true]], "retellKw": ["31 October", "costume", "trick or treat", "jack-o-lantern", "candy"]}, "christmas": {"facts": [["Christmas is the most popular holiday in the USA.", "Рождество — самый популярный праздник в США."], ["Americans send about 1.6 billion Christmas cards every year!", "Американцы отправляют около 1,6 миллиарда рождественских открыток в год!"], ["The Christmas tree tradition came from Germany.", "Традиция ёлки пришла из Германии."], ["In the USA, Christmas is also a big shopping season.", "В США Рождество — ещё и большой сезон распродаж."]], "warm": [["What do you want for Christmas this year?", "Что ты хочешь на Рождество в этом году?"], ["Do you decorate your home for holidays?", "Ты украшаешь дом к праздникам?"], ["Do you write letters or cards to anyone?", "Ты пишешь кому-нибудь письма или открытки?"]], "seq": [["People decorate houses and put up a tree", "Люди украшают дома и ставят ёлку"], ["Some people hang stockings on the fireplace", "Кто-то вешает чулки на камин"], ["Children put out cookies and milk for Santa", "Дети оставляют печенье и молоко для Санты"], ["In the morning they open gifts", "Утром они открывают подарки"], ["Families have a big dinner", "Семьи устраивают большой ужин"]], "seqw": [["People decorate their houses", "Люди украшают дома"], ["They put up a Christmas tree", "Они ставят ёлку"], ["They put lights and ornaments on the tree", "Они вешают огоньки и украшения"], ["Some people hang stockings on the fireplace", "Кто-то вешает чулки на камин"], ["Children put out cookies and milk", "Дети оставляют печенье и молоко"], ["In the morning they open their gifts", "Утром они открывают подарки"]], "details": [["When is Christmas?", ["On 25 December", "On 31 October", "On 4 July"], 0], ["What do people put on the tree?", ["Colorful lights and ornaments", "Eggs and flowers", "Candles only"], 0], ["Where do some people hang stockings?", ["On the fireplace", "On the door", "On the tree"], 0], ["What do children put out for Santa?", ["Cookies and milk", "Pizza and juice", "Nothing"], 0], ["What is the traditional Christmas dinner?", ["Turkey or ham", "Fish and rice", "Hot dogs"], 0]], "write": [["Christmas is on 25.", "December", ""], ["They put colorful lights and on the tree.", "ornaments", ""], ["Santa Claus comes down the.", "chimney", ""], ["Children put out cookies and for Santa.", "milk", ""]], "notext": ["People put up a Christmas tree.", "Children put out cookies and milk for Santa.", "The traditional dinner is turkey or ham.", "Children look for eggs in the garden."], "dict": [["Some people hang on the fireplace.", "stockings", ""], ["Santa comes down the.", "chimney", ""], ["On Christmas Eve they put out cookies and.", "milk", ""]], "dictw": [["They put up a Christmas.", "tree", ""], ["Children put out cookies and.", "milk", ""]], "game": {"kind": "tree", "stages": ["🌲", "🌲✨", "🎀🌲", "🎁🎄", "🎄⭐"], "qs": [["When is Christmas?", ["25 December", "31 October", "1 January"], 0], ["What do people put on the tree?", ["Lights and ornaments", "Eggs", "Flags"], 0], ["Where are the stockings?", ["On the fireplace", "Under the bed", "In the garden"], 0], ["What do children put out for Santa?", ["Cookies and milk", "Coffee", "Candy"], 0], ["What is the dinner?", ["Turkey or ham", "Pizza", "Sushi"], 0]]}, "levels": {"a1": {"while": ["hunt", "tf"], "after": ["seq", "details", "boss", "game", "speak"], "before": ["matchpic"]}, "a2": {"while": ["seqw", "tf"], "after": ["details", "write", "notext", "boss", "game", "speak"], "before": ["matchpic"]}, "b1": {"while": ["dictw"], "after": ["rebuild", "dict", "notext", "boss", "game", "speak"], "before": ["matchpic"]}}, "decoys": [["pumpkin", "🎃"], ["witch", "🧙"], ["fireworks", "🎆"]], "tf": [["Christmas is on 25 December.", true], ["Santa Claus comes down the chimney.", true], ["Children put out pizza for Santa.", false], ["The traditional dinner is turkey or ham.", true]], "retellKw": ["25 December", "Christmas tree", "stockings", "Santa Claus", "gifts"]}, "independence": {"facts": [["The USA has 50 states. The flag has 13 stripes — one for each first colony.", "В США 50 штатов, а на флаге 13 полос — по одной за первые колонии."], ["About 150 million hot dogs are eaten on July 4!", "4 июля съедают около 150 миллионов хот-догов!"], ["Fireworks on July 4 are a tradition since 1777.", "Салют 4 июля — традиция с 1777 года."], ["The Declaration of Independence was signed in Philadelphia.", "Декларацию независимости подписали в Филадельфии."]], "warm": [["What colors are on your country's flag?", "Какие цвета на флаге твоей страны?"], ["What holidays does your country celebrate with fireworks?", "Какие праздники в твоей стране отмечают салютом?"], ["What do you usually eat at a picnic?", "Что ты обычно ешь на пикнике?"]], "seq": [["Many towns have a parade", "Во многих городах проходит парад"], ["People wear red, white and blue", "Люди одеваются в красное, белое и синее"], ["Families have picnics and barbecues", "Семьи устраивают пикники и барбекю"], ["People eat hamburgers and hot dogs", "Люди едят гамбургеры и хот-доги"], ["Fireworks light up the evening sky", "Фейерверки озаряют вечернее небо"]], "seqw": [["Many towns have a parade in the morning", "Утром во многих городах проходит парад"], ["People wear red, white and blue clothes", "Люди одеваются в красное, белое и синее"], ["They wave American flags", "Они машут американскими флагами"], ["Families have picnics in the afternoon", "Днём семьи устраивают пикники"], ["They cook hamburgers and hot dogs", "Они готовят гамбургеры и хот-доги"], ["Fireworks shows start in the evening", "Вечером начинаются фейерверки"]], "details": [["When is Independence Day?", ["On 4 July", "On 4 June", "On 24 July"], 0], ["When did the colonies declare independence?", ["In 1776", "In 1876", "In 1492"], 0], ["From whom did America become free?", ["From Great Britain", "From Spain", "From France"], 0], ["What do people wear on July 4?", ["Red, white and blue clothes", "Black clothes", "Costumes"], 0], ["When are the big fireworks shows?", ["In the evening", "In the morning", "At lunch"], 0]], "write": [["Independence Day is on 4.", "July", ""], ["In 1776 the colonies declared.", "independence", ""], ["People wear red, white and clothes.", "blue", ""], ["They cook hamburgers and hot.", "dogs", ""]], "notext": ["People wave American flags.", "Families eat watermelon and drink lemonade.", "The fireworks are very beautiful.", "Children look for Easter eggs."], "dict": [["In the American colonies declared independence.", "1776", ""], ["Families have picnics or.", "barbecues", ""], ["They eat and drink lemonade.", "watermelon", ""]], "dictw": [["Independence Day is on 4.", "July", ""], ["In 1776 America became from Great Britain.", "free", ""]], "game": {"kind": "flag", "stages": ["⬜", "🟥⬜", "🟥⬜🟥", "🇺🇸", "🇺🇸⭐"], "qs": [["When is Independence Day?", ["4 July", "4 August", "24 June"], 0], ["When did America become free?", ["1776", "1876", "1676"], 0], ["From whom?", ["Great Britain", "Spain", "China"], 0], ["What do people wear?", ["Red, white and blue", "Green", "Black"], 0], ["When are the fireworks?", ["In the evening", "In the morning", "At night only"], 0]]}, "levels": {"a1": {"while": ["hunt", "tf"], "after": ["seq", "details", "boss", "game", "speak"], "before": ["matchpic"]}, "a2": {"while": ["seqw", "tf"], "after": ["details", "write", "notext", "boss", "game", "speak"], "before": ["matchpic"]}, "b1": {"while": ["dictw"], "after": ["rebuild", "dict", "notext", "boss", "game", "speak"], "before": ["matchpic"]}}, "decoys": [["Easter egg", "🥚"], ["snowman", "⛄"], ["witch", "🧙"]], "tf": [["People wear red, white, and blue clothes.", true], ["Families have picnics in the afternoon.", true], ["Fireworks are in the morning.", false], ["Independence Day is in March.", false]], "retellKw": ["4 July", "1776", "flags", "picnic", "fireworks"]}, "easter": {"facts": [["Easter is always on a Sunday in March or April — the date changes every year.", "Пасха всегда в воскресенье в марте или апреле — дата каждый год меняется."], ["The White House has an Easter Egg Roll for children.", "В Белом доме для детей устраивают «катание яиц»."], ["Americans buy about 700 million marshmallow peeps!", "Американцы покупают около 700 миллионов зефирных цыплят!"], ["The Easter Bunny tradition came from Germany.", "Традиция Пасхального кролика пришла из Германии."]], "warm": [["Do you paint eggs for any holiday?", "Ты красишь яйца к какому-нибудь празднику?"], ["What do you like doing in spring?", "Что ты любишь делать весной?"], ["Do you have a pet? Would you like one?", "У тебя есть питомец? Хотел бы?"]], "seq": [["People decorate eggs with bright colours", "Люди разукрашивают яйца яркими цветами"], ["They buy chocolate eggs and candy", "Они покупают шоколадные яйца и конфеты"], ["The Easter Bunny hides baskets", "Пасхальный кролик прячет корзинки"], ["Children go on an egg hunt", "Дети отправляются на поиски яиц"], ["People have a big Easter dinner", "Люди устраивают большой пасхальный обед"]], "seqw": [["People decorate eggs", "Люди разукрашивают яйца"], ["They paint them bright colours", "Они раскрашивают их в яркие цвета"], ["They buy chocolate eggs and candy", "Они покупают шоколадные яйца и конфеты"], ["Children wake up early", "Дети просыпаются рано"], ["The Easter Bunny hides baskets of candy", "Пасхальный кролик прячет корзинки с конфетами"], ["Children search for eggs outside", "Дети ищут яйца на улице"]], "details": [["When is Easter?", ["On a Sunday in March or April", "On 25 December", "On 4 July"], 0], ["What do people decorate?", ["Eggs", "Houses", "Trees"], 0], ["Who hides the baskets of candy?", ["The Easter Bunny", "Santa Claus", "Parents"], 0], ["Where do children search for eggs?", ["In the garden or in the park", "In the house only", "At school"], 0], ["What do some women wear on Easter Sunday?", ["Bonnets", "Costumes", "Boots"], 0]], "write": [["Easter is a holiday.", "Christian", ""], ["People paint eggs bright and put patterns on them.", "colours", ""], ["The Easter hides baskets of candy.", "Bunny", ""], ["Children search for eggs in the or in the park.", "garden", ""]], "notext": ["People decorate eggs with bright colours.", "The Easter Bunny hides baskets of candy.", "Some women wear bonnets on Easter Sunday.", "Children watch horror films on Easter."], "dict": [["People paint them bright.", "colours", ""], ["The Easter hides the baskets.", "Bunny", ""], ["Some women wear on Easter Sunday.", "bonnets", ""]], "dictw": [["People decorate.", "eggs", ""], ["The Easter hides the baskets.", "Bunny", ""]], "game": {"kind": "eggs", "stages": ["🌿", "🥚", "🐰", "🧺", "🧺⭐"], "qs": [["When is Easter?", ["A Sunday in March or April", "31 October", "4 July"], 0], ["What do people decorate?", ["Eggs", "Houses", "Cars"], 0], ["Who hides the baskets?", ["The Easter Bunny", "Santa", "Teachers"], 0], ["Where do children search?", ["In the garden or park", "At school", "In shops"], 0], ["What do some women wear?", ["Bonnets", "Hats with flags", "Costumes"], 0]]}, "levels": {"a1": {"while": ["hunt", "tf"], "after": ["seq", "details", "boss", "game", "speak"], "before": ["matchpic"]}, "a2": {"while": ["seqw", "tf"], "after": ["details", "write", "notext", "boss", "game", "speak"], "before": ["matchpic"]}, "b1": {"while": ["dictw"], "after": ["rebuild", "dict", "notext", "boss", "game", "speak"], "before": ["matchpic"]}}, "decoys": [["skeleton", "💀"], ["fireworks", "🎆"], ["pumpkin", "🎃"]], "tf": [["Easter is always on a Sunday.", true], ["The Easter Bunny hides baskets of candy.", true], ["People decorate houses with flags.", false], ["Children search for eggs outside.", true]], "retellKw": ["Sunday", "eggs", "the Easter Bunny", "egg hunt", "dinner"]}};/* ============ LISTENING ENGINE 4.0: Before / While / After ============ */
 var HOLP={id:null,hasFile:false,audio:null,rate:1,playing:false,
  init:function(id){ var self=this; this.id=id; this.playing=false;
-  var x=new XMLHttpRequest(); x.open('HEAD','audio/'+id+'.mp3',true); x.timeout=8000;
-  x.onload=function(){ self.hasFile=(x.status>=200&&x.status<300); if(self.hasFile){ self.audio=new Audio('audio/'+id+'.mp3'); self.audio.onended=function(){HOLP.playing=false;HOLP.ui();}; } self.ui(); };
-  x.onerror=function(){ self.hasFile=false; self.ui(); }; x.ontimeout=function(){ self.hasFile=false; self.ui(); };
-  try{ x.send(); }catch(e){ self.hasFile=false; self.ui(); }
+  try{
+   var x=new XMLHttpRequest(); x.open('HEAD','audio/'+id+'.mp3',true); x.timeout=8000;
+   x.onload=function(){ self.hasFile=(x.status>=200&&x.status<300); if(self.hasFile){ self.audio=new Audio('audio/'+id+'.mp3'); self.audio.onended=function(){HOLP.playing=false;HOLP.ui();}; } self.ui(); };
+   x.onerror=function(){ self.hasFile=false; self.ui(); }; x.ontimeout=function(){ self.hasFile=false; self.ui(); };
+   try{ x.send(); }catch(e2){ self.hasFile=false; self.ui(); }
+  }catch(e){ self.hasFile=false; self.ui(); }
  },
  stop:function(){ try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} if(this.audio) this.audio.pause(); this.playing=false; this.ui(); },
  toggle:function(){ if(this.hasFile){ if(!this.audio) return; if(this.audio.paused){ try{speechSynthesis.cancel();}catch(e){} this.audio.playbackRate=this.rate; this.audio.play(); this.playing=true; } else { this.audio.pause(); this.playing=false; } }
@@ -1852,13 +1889,12 @@ function rHunt(id,lvl,body,isDone){
 }
 function rSeq(id,lvl,body,isDone,items,showRu){
  if(isDone){ body.innerHTML='<div class="small">Done · Выполнено</div>'; return; }
- var idx=items.map(function(_,i){return i});
+ var idx=items.map(function(_,i){return i}), attempts=0;
  for(var i=idx.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=idx[i];idx[i]=idx[j];idx[j]=t;}
- body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Слушай и собирай">Listen and build</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на фразы в том порядке, как они звучат в тексте.">Tap the phrases in the order you hear them in the text.</div>'
+ body.innerHTML='<h3 style="margin:0 0 4px" data-ru="Слушай и собирай">Listen and build</h3><div class="small" style="margin-bottom:8px" data-ru="Нажимай на фразы в том порядке, как они звучат в тексте. Две попытки — потом покажем ответ.">Tap the phrases in the order you hear them. Two tries — then we show the answer.</div>'
   +'<div class="tl-track">'+items.map(function(_,i){return '<div class="tl-slot" data-i="'+i+'"><span class="tl-n">'+(i+1)+'</span></div>'}).join('')+'</div>'
   +'<div class="tl-bank">'+idx.map(function(n){return '<div class="tl-card" data-n="'+n+'"'+(showRu?' data-ru="'+esc(items[n][1]).replace(/"/g,'&quot;')+'"':'')+'>'+items[n][0]+'</div>'}).join('')+'</div>'
   +'<div class="quiz-foot" style="margin-top:12px"><button class="btn pink" style="color:#fff">Check</button><button class="btn ghost hide">Try again</button><span class="hol-fb" style="font-weight:800"></span></div>';
- var bank=body.querySelector('.tl-bank');
  body.querySelectorAll('.tl-card').forEach(function(c){
   c.onclick=function(){
    if(c.dataset.used)return;
@@ -1880,9 +1916,21 @@ function rSeq(id,lvl,body,isDone,items,showRu){
    sfx.pop();
   };
  });
+ function reveal(){
+  body.querySelectorAll('.tl-slot').forEach(function(slot,i){
+   slot.dataset.lock=1; slot.classList.remove('wrong'); slot.classList.add('filled','right');
+   slot.innerHTML='<span class="tl-n">'+(i+1)+'</span>'+items[i][0];
+  });
+  body.querySelectorAll('.tl-card').forEach(function(c){ c.dataset.used=1; c.style.opacity='.2'; c.style.pointerEvents='none'; });
+  body.querySelector('.hol-fb').textContent='The right order · Правильный порядок';
+  var nx=document.createElement('button'); nx.className='btn yellow'; nx.textContent='Continue → · Дальше';
+  body.querySelector('.quiz-foot').appendChild(nx);
+  nx.onclick=function(){ holMark(id,lvl,(items===HOL_TASKS[id].seqw?'seqw':'seq'),body); };
+ }
  body.querySelector('.btn.pink').onclick=function(){
   var all=true;
   body.querySelectorAll('.tl-slot').forEach(function(slot){
+   if(slot.dataset.lock)return;
    slot.dataset.lock=1;
    if(!slot.classList.contains('filled')){ all=false; return; }
    if(+slot.dataset.n===+slot.dataset.i){ slot.classList.add('right'); }
@@ -1893,12 +1941,24 @@ function rSeq(id,lvl,body,isDone,items,showRu){
    body.querySelector('.hol-fb').textContent='Perfect! · Идеально!';
    setTimeout(function(){ holMark(id,lvl,(items===HOL_TASKS[id].seqw?'seqw':'seq'),body); },900);
   } else {
-   sfx.wrong();
-   body.querySelector('.hol-fb').textContent='Green is right · Зелёные верны';
-   body.querySelector('.btn.ghost').classList.remove('hide');
+   attempts++; sfx.wrong();
+   if(attempts>=2){ reveal(); }
+   else {
+    body.querySelector('.hol-fb').textContent='One more try · Ещё одна попытка';
+    body.querySelector('.btn.ghost').classList.remove('hide');
+   }
   }
  };
- body.querySelector('.btn.ghost').onclick=function(){ rSeq(id,lvl,body,isDone,items,showRu); };
+ body.querySelector('.btn.ghost').onclick=function(){
+  attempts=0;
+  body.querySelectorAll('.tl-slot').forEach(function(slot,i){
+   delete slot.dataset.lock; slot.classList.remove('filled','right','wrong');
+   slot.innerHTML='<span class="tl-n">'+(i+1)+'</span>'; delete slot.dataset.n;
+  });
+  body.querySelectorAll('.tl-card').forEach(function(c){ c.dataset.used=''; c.style.opacity='1'; c.style.pointerEvents='auto'; });
+  body.querySelector('.hol-fb').textContent='';
+  body.querySelector('.btn.ghost').classList.add('hide');
+ };
 }
 function rDetails(id,lvl,body,isDone,showRu){
  var T=HOL_TASKS[id];
@@ -1937,10 +1997,16 @@ function rWrite(id,lvl,body,isDone){
  var words=T.write.map(function(it){return it[1]}); for(var i=words.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=words[i];words[i]=words[j];words[j]=t;}
  var bank=body.querySelector('.hol-bank');
  words.forEach(function(x){ var b=document.createElement('button'); b.className='btn yellow bw'; b.style.fontSize='14px'; b.style.padding='4px 12px'; b.textContent=x;
-  b.onclick=function(){ var empty=null; w.querySelectorAll('.gapword').forEach(function(g){ if(!g.classList.contains('filled')&&!empty) empty=g; });
-   if(!empty)return; empty.textContent=x; empty.classList.add('filled'); empty.dataset.w=x; b.classList.add('used'); sfx.pop(); };
+  b.onclick=function(){ var target=null;
+   w.querySelectorAll('.gapword.sel:not(.filled)').forEach(function(g){ if(!target) target=g; });
+   if(!target) w.querySelectorAll('.gapword:not(.filled)').forEach(function(g){ if(!target) target=g; });
+   if(!target)return; target.textContent=x; target.classList.add('filled'); target.classList.remove('sel'); target.dataset.w=x; b.classList.add('used'); sfx.pop(); };
   bank.appendChild(b); });
- w.querySelectorAll('.gapword').forEach(function(g){ g.onclick=function(){ if(!g.classList.contains('filled'))return; var x=g.dataset.w; g.textContent='?'; g.classList.remove('filled'); delete g.dataset.w; body.querySelectorAll('.bw').forEach(function(b){ if(b.textContent===x)b.classList.remove('used'); }); }; });
+ w.querySelectorAll('.gapword').forEach(function(g){ g.onclick=function(){
+  if(g.classList.contains('filled')){ var x=g.dataset.w; g.textContent='?'; g.classList.remove('filled'); delete g.dataset.w; body.querySelectorAll('.bw').forEach(function(b){ if(b.textContent===x)b.classList.remove('used'); }); return; }
+  w.querySelectorAll('.gapword.sel').forEach(function(x2){ x2.classList.remove('sel'); });
+  g.classList.add('sel'); sfx.pop();
+ }; });
  body.querySelector('.btn.pink').onclick=function(){
   var got=0; w.querySelectorAll('.gapword').forEach(function(g){ var i=+g.dataset.i; g.style.pointerEvents='none'; if(g.dataset.w && g.dataset.w.toLowerCase()===T.write[i][1].toLowerCase()){ g.classList.add('right'); got++; } else { g.classList.add('wrong'); g.textContent=T.write[i][1]; } });
   body.querySelectorAll('.bw').forEach(function(b){ b.style.pointerEvents='none'; });
